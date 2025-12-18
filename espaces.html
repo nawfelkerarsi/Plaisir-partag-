@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plaisir partagé</title>
+
+  <script src="/assets/theme.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/global.css" />
+</head>
+<body class="bg-white text-ink">
+  <div id="navbar-placeholder"></div>
+
+  <main class="space-y-16">
+    <section id="espaces" class="max-w-6xl mx-auto px-6 pt-20">
+      <div class="relative w-full max-w-5xl mx-auto aspect-[3/1] flex items-center justify-center overflow-hidden">
+        <canvas id="stripe-espaces" class="absolute inset-0 w-full h-full border border-white"></canvas>
+        <svg class="text-mask-layer w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <mask id="espaces-cut">
+              <rect width="100%" height="100%" fill="white"></rect>
+              <text x="50%" y="75%" text-anchor="middle" font-size="30" fill="black" letter-spacing="2">ESPACES</text>
+            </mask>
+          </defs>
+          <rect width="100%" height="100%" fill="white" mask="url(#espaces-cut)"></rect>
+        </svg>
+      </div>
+    </section>
+
+    <section id="formulaire" class="bg-gray-50 py-14 !mt-0">
+      <div class="max-w-5xl mx-auto px-6 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <p class="uppercase text-xs tracking-[0.2em] text-gray-500">Formulaire</p>
+            <h2 class="text-3xl font-semibold">Location d'espaces</h2>
+          </div>
+          <div class="flex flex-wrap items-center gap-4 text-sm">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-300" data-step-dot="1"></span>
+              <span class="text-xs md:text-sm">Événement</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-gray-300" data-step-dot="2"></span>
+              <span class="text-xs md:text-sm">Contact</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-gray-300" data-step-dot="3"></span>
+              <span class="text-xs md:text-sm">Logistique</span>
+            </div>
+          </div>
+        </div>
+
+        <form id="spaceForm" novalidate class="bg-white border border-gray-200 shadow-lg rounded-lg p-8 space-y-10">
+          <div data-step="1" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Type d'événement</label>
+                <select id="eventType" name="eventType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
+                  <option value="">Sélectionnez</option>
+                  <option value="Étudiant">Étudiant</option>
+                  <option value="Entreprise">Entreprise</option>
+                  <option value="Collectivité">Collectivité</option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Type de salle recherchée</label>
+                <select name="venueType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
+                  <option value="">Sélectionnez</option>
+                  <option value="Club">Club</option>
+                  <option value="Salle de concert">Salle de concert</option>
+                  <option value="Plein air">Plein air</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Date souhaitée</label>
+                <input name="dateSouhaitee" type="date" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Nombre estimé de participants</label>
+                <input name="participants" type="number" min="1" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+            </div>
+            <div class="flex justify-end">
+              <button data-go="2" type="button" class="border border-ink px-6 py-3 rounded-md hover:bg-black hover:text-white transition">
+                Continuer
+              </button>
+            </div>
+          </div>
+
+          <div data-step="2" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Nom</label>
+                <input name="lastName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Prénom</label>
+                <input name="firstName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Adresse mail</label>
+                <input name="email" type="email" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Numéro de téléphone</label>
+                <input name="phone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Dénomination sociale</label>
+                <input name="companyName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Numéro de SIRET / RNA</label>
+                <input name="siret" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Adresse de facturation</label>
+              <input name="billingAddress" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+            </div>
+            <div class="flex items-center justify-between">
+              <button data-go="1" type="button" class="border border-ink px-5 py-2 rounded-md hover:bg-gray-100 transition">Retour</button>
+              <button data-go="3" type="button" class="border border-ink px-6 py-3 rounded-md hover:bg-black hover:text-white transition">Continuer</button>
+            </div>
+          </div>
+
+          <div data-step="3" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Heure d'ouverture au public</label>
+                <input name="openingHour" type="time" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Heure de fermeture au public</label>
+                <input name="closingHour" type="time" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
+              </div>
+            </div>
+            <div class="space-y-3">
+              <label class="block text-sm font-medium">Heure(s) d'exploitation supplémentaire ?</label>
+              <div class="flex gap-3">
+                <label class="flex-1">
+                  <input type="radio" name="extraHoursNeeded" value="Oui" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-blue-600 peer-checked:text-white transition cursor-pointer">Oui</span>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="extraHoursNeeded" value="Non" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-red-600 peer-checked:text-white transition cursor-pointer">Non</span>
+                </label>
+              </div>
+              <div class="space-y-2 hidden" id="extraHoursWrap">
+                <label class="block text-sm text-gray-600">Si oui, combien d'heures ?</label>
+                <input id="extraHours" name="extraHours" type="number" min="1" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
+              </div>
+            </div>
+            <div class="space-y-3">
+              <label class="block text-sm font-medium">Heure(s) de montage / démontage à prévoir ?</label>
+              <div class="flex gap-3">
+                <label class="flex-1">
+                  <input type="radio" name="setupHoursNeeded" value="Oui" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-blue-600 peer-checked:text-white transition cursor-pointer">Oui</span>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="setupHoursNeeded" value="Non" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-red-600 peer-checked:text-white transition cursor-pointer">Non</span>
+                </label>
+              </div>
+              <div class="space-y-2 hidden" id="setupHoursWrap">
+                <label class="block text-sm text-gray-600">Si oui, combien d'heures ?</label>
+                <input id="setupHours" name="setupHours" type="number" min="1" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Salle avec Licence IV ?</label>
+              <div class="flex gap-3">
+                <label class="flex-1">
+                  <input type="radio" name="licenceIV" value="Oui" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-blue-600 peer-checked:text-white transition cursor-pointer">Oui</span>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="licenceIV" value="Non" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-red-600 peer-checked:text-white transition cursor-pointer">Non</span>
+                </label>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Salle avec office traiteur ?</label>
+              <div class="flex gap-3">
+                <label class="flex-1">
+                  <input type="radio" name="officeTraiteur" value="Oui" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-blue-600 peer-checked:text-white transition cursor-pointer">Oui</span>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="officeTraiteur" value="Non" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-red-600 peer-checked:text-white transition cursor-pointer">Non</span>
+                </label>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Besoin d'un service traiteur ?</label>
+              <div class="flex gap-3">
+                <label class="flex-1">
+                  <input type="radio" name="serviceTraiteur" value="Oui" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-blue-600 peer-checked:text-white transition cursor-pointer">Oui</span>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="serviceTraiteur" value="Non" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-red-600 peer-checked:text-white transition cursor-pointer">Non</span>
+                </label>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Besoin d'animation(s) ?</label>
+              <div class="flex gap-3">
+                <label class="flex-1">
+                  <input type="radio" name="animations" value="Oui" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-blue-600 peer-checked:text-white transition cursor-pointer">Oui</span>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="animations" value="Non" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-red-600 peer-checked:text-white transition cursor-pointer">Non</span>
+                </label>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Message : veuillez affiner votre demande</label>
+              <textarea name="message" rows="4" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none"></textarea>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <button data-go="2" type="button" class="border border-ink px-5 py-2 rounded-md hover:bg-gray-100 transition">Retour</button>
+              <button type="submit" class="border border-ink px-6 py-3 rounded-md hover:bg-black hover:text-white transition">
+                Envoyer
+              </button>
+            </div>
+          </div>
+
+        </form>
+        <p id="spaceFormStatus" class="mt-4 text-sm text-gray-600">Un chargé de projet vous répond en 24h ouvrées.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script src="/footer.js"></script>
+  <script src="/stripe-gradient-main/dist/stripe-gradient.js"></script>
+  <script src="/nav.js"></script>
+  <script>
+    const steps = document.querySelectorAll("[data-step]");
+    const dots = document.querySelectorAll("[data-step-dot]");
+    const goButtons = document.querySelectorAll("[data-go]");
+    let currentStep = 1;
+
+    const goToStep = (step) => {
+      currentStep = step;
+      steps.forEach((panel) => {
+        panel.classList.toggle("hidden", Number(panel.dataset.step) !== step);
+      });
+      dots.forEach((dot) => {
+        const active = Number(dot.dataset.stepDot) === step;
+        dot.classList.toggle("bg-blue-300", active);
+        dot.classList.toggle("bg-gray-300", !active);
+      });
+    };
+
+    const clearFieldState = (control) => {
+      control.classList.remove("ring-2", "ring-red-500");
+      const holder = control.parentElement;
+      if (!holder) return;
+      const error = holder.querySelector(".field-error");
+      if (error) error.remove();
+    };
+
+    const markFieldError = (control) => {
+      const holder = control.parentElement;
+      control.classList.add("ring-2", "ring-red-500");
+      if (holder) {
+        let error = holder.querySelector(".field-error");
+        if (!error) {
+          error = document.createElement("p");
+          error.className = "field-error mt-1 text-xs text-red-600";
+          holder.appendChild(error);
+        }
+        error.textContent = control.validationMessage || "Ce champ est requis.";
+      }
+      control.scrollIntoView({ behavior: "smooth", block: "center" });
+      control.focus({ preventScroll: true });
+    };
+
+    const attachClearHandlers = () => {
+      document.querySelectorAll("input, select, textarea").forEach((control) => {
+        ["input", "change"].forEach((evt) =>
+          control.addEventListener(evt, () => clearFieldState(control))
+        );
+      });
+    };
+
+    const validateStep = (step, ignoreStepHidden = false) => {
+      const panel = document.querySelector(`[data-step="${step}"]`);
+      if (!panel) return true;
+      const controls = panel.querySelectorAll("input, select, textarea");
+      for (const control of controls) {
+        clearFieldState(control);
+        const hiddenAncestor = control.closest(".hidden");
+        if (hiddenAncestor && !(ignoreStepHidden && hiddenAncestor === panel)) continue;
+        if (!control.checkValidity()) {
+          markFieldError(control);
+          return false;
+        }
+      }
+      return true;
+    };
+
+    goButtons.forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const parentStep = btn.closest("[data-step]");
+        const stepNumber = parentStep ? Number(parentStep.dataset.step) : currentStep;
+        const target = Number(btn.dataset.go);
+        const isBack = target < currentStep;
+        if (!isBack && !validateStep(stepNumber)) return;
+        goToStep(target);
+      })
+    );
+
+    const extraHours = document.getElementById("extraHours");
+    const extraWrap = document.getElementById("extraHoursWrap");
+    const setupHours = document.getElementById("setupHours");
+    const setupWrap = document.getElementById("setupHoursWrap");
+
+    const toggleDetail = (name, wrap, input) => {
+      const radios = document.querySelectorAll(`input[name="${name}"]`);
+      const yesSelected = Array.from(radios).some((r) => r.checked && r.value === "Oui");
+      wrap.classList.toggle("hidden", !yesSelected);
+      if (!yesSelected && input) {
+        input.value = "";
+        input.removeAttribute("required");
+      } else if (yesSelected && input) {
+        input.setAttribute("required", "true");
+      }
+    };
+
+    const wireRadioReveal = (groupName, wrap, input) => {
+      document.querySelectorAll(`input[name="${groupName}"]`).forEach((radio) => {
+        radio.addEventListener("change", () => toggleDetail(groupName, wrap, input));
+      });
+      toggleDetail(groupName, wrap, input);
+    };
+
+    wireRadioReveal("extraHoursNeeded", extraWrap, extraHours);
+    wireRadioReveal("setupHoursNeeded", setupWrap, setupHours);
+    attachClearHandlers();
+
+    const form = document.getElementById("spaceForm");
+    const statusEl = document.getElementById("spaceFormStatus");
+
+    const setStatus = (text, variant = "idle") => {
+      if (!statusEl) return;
+      statusEl.textContent = text;
+      statusEl.classList.remove("text-gray-600", "text-ink", "text-red-600", "font-medium");
+      if (variant === "sending" || variant === "success") {
+        statusEl.classList.add("text-ink", "font-medium");
+      } else if (variant === "error") {
+        statusEl.classList.add("text-red-600", "font-medium");
+      } else {
+        statusEl.classList.add("text-gray-600");
+      }
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      for (let s = 1; s <= steps.length; s++) {
+        if (!validateStep(s, true)) {
+          goToStep(s);
+          return;
+        }
+      }
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        if (data[key]) {
+          data[key] = [].concat(data[key], value);
+        } else {
+          data[key] = value;
+        }
+      });
+      setStatus("Envoi en cours...", "sending");
+      try {
+        const response = await fetch("/api/espaces", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        console.log("Demande espace JSON :", data, "Réponse :", result);
+        if (response.ok && result?.success) {
+          setStatus("Demande envoyée ! Nous revenons vers vous rapidement.", "success");
+          form.reset();
+          goToStep(1);
+          toggleDetail("extraHoursNeeded", extraWrap, extraHours);
+          toggleDetail("setupHoursNeeded", setupWrap, setupHours);
+          setTimeout(() => setStatus("Un chargé de projet vous répond en 24h ouvrées.", "idle"), 4000);
+        } else {
+          throw new Error(result?.error || "Réponse serveur non valide");
+        }
+      } catch (err) {
+        console.error("Erreur d'envoi du formulaire espaces :", err);
+        setStatus("Impossible d'envoyer la demande pour le moment. Merci de réessayer.", "error");
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.Gradient) {
+        const palette = ["#d72638", "#ff6b6b", "#ffc857", "#8e2de2"];
+        const start = Math.floor(Math.random() * palette.length);
+        const colors = palette.slice(start).concat(palette.slice(0, start));
+        const gradient = new Gradient({
+          canvas: "#stripe-espaces",
+          colors
+        });
+        const speedBoost = 1.8;
+        const uniforms = gradient.uniforms || {};
+        uniforms.u_global?.value?.noiseSpeed && (uniforms.u_global.value.noiseSpeed.value *= speedBoost);
+        uniforms.u_vertDeform?.value?.noiseSpeed && (uniforms.u_vertDeform.value.noiseSpeed.value *= speedBoost);
+        uniforms.u_vertDeform?.value?.noiseFlow && (uniforms.u_vertDeform.value.noiseFlow.value *= speedBoost);
+        uniforms.u_waveLayers?.value?.forEach((layer) => {
+          layer?.value?.noiseSpeed && (layer.value.noiseSpeed.value *= speedBoost);
+          layer?.value?.noiseFlow && (layer.value.noiseFlow.value *= speedBoost);
+        });
+      }
+    });
+
+  </script>
+</body>
+</html>
