@@ -1,0 +1,44 @@
+.mask-text {
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.page-shell { position: relative; min-height: 100vh; }
+
+.text-mask-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.text-mask-layer text {
+  font-family: "Bebas Neue", "Impact", sans-serif;
+  font-weight: 900;
+}
+
+input[type="date"],
+input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+  line-height: 1.5rem;
+  height: 2.75rem;
+}
+
+.logo-mark {
+  mask-image: url("/assets/logo.svg");
+  -webkit-mask-image: url("/assets/logo.svg");
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% auto;
+  -webkit-mask-size: 100% auto;
+  mask-position: left center;
+  -webkit-mask-position: left center;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}

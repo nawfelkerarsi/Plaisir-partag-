@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plaisir partagé — Contact</title>
+
+  <script src="/assets/theme.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/global.css" />
+  <style>
+    .contact-animated-shadow {
+      position: relative;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 24px 50px rgba(15, 15, 15, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(8px);
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .contact-animated-shadow::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background:
+        radial-gradient(38% 38% at 20% 25%, rgba(215, 38, 56, 0.28), transparent 55%),
+        radial-gradient(36% 36% at 78% 18%, rgba(255, 107, 107, 0.25), transparent 55%),
+        radial-gradient(34% 34% at 62% 78%, rgba(255, 200, 87, 0.24), transparent 55%),
+        radial-gradient(32% 32% at 14% 82%, rgba(142, 45, 226, 0.25), transparent 60%),
+        radial-gradient(30% 30% at 85% 75%, rgba(46, 196, 182, 0.22), transparent 55%),
+        radial-gradient(28% 28% at 45% 10%, rgba(66, 99, 235, 0.2), transparent 55%);
+      background-size: 150% 150%, 140% 140%, 150% 150%, 140% 140%, 135% 135%, 135% 135%;
+      background-position: 18% 20%, 78% 14%, 62% 78%, 10% 85%, 85% 70%, 48% 8%;
+      filter: blur(30px);
+      opacity: 0.7;
+      mask: radial-gradient(circle at center, transparent 0 58%, black 82%);
+      -webkit-mask: radial-gradient(circle at center, transparent 0 58%, black 82%);
+    }
+    .contact-animated-shadow > * { position: relative; z-index: 1; }
+    /* Glassmorphism inputs */
+    #contactForm input,
+    #contactForm select,
+    #contactForm textarea {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(15, 15, 15, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 10px 25px rgba(15, 15, 15, 0.05);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      border-radius: 10px;
+    }
+    #contactForm input:focus,
+    #contactForm select:focus,
+    #contactForm textarea:focus {
+      border-color: rgba(15, 15, 15, 0.18);
+      box-shadow: 0 10px 30px rgba(15, 15, 15, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="bg-white text-ink">
+  <div id="navbar-placeholder"></div>
+  <main class="space-y-16">
+    <section id="formulaire" class="bg-gray-50 py-28">
+      <div class="max-w-5xl mx-auto px-6 space-y-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div class="space-y-2">
+            <p class="uppercase text-xs tracking-[0.2em] text-gray-500">Formulaire</p>
+            <h2 class="text-3xl font-semibold">Entrons en contact</h2>
+            <p class="text-gray-600 max-w-2xl">Expliquez-nous votre besoin : nous revenons vers vous rapidement pour concrétiser votre projet, qu’il s’agisse d’un simple renseignement ou d’une demande complète.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm w-full md:w-auto">
+            <div class="flex items-center gap-3 border border-gray-200 rounded-lg bg-white px-4 py-3 shadow-sm">
+              <div>
+                <p class="font-semibold text-ink">Par téléphone</p>
+                <p class="text-gray-600">Une équipe disponible pour vous rappeler</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 border border-gray-200 rounded-lg bg-white px-4 py-3 shadow-sm">
+              <div>
+                <p class="font-semibold text-ink">Par e-mail</p>
+                <p class="text-gray-600">Réponse sous 24h ouvrées</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form id="contactForm" novalidate class="contact-animated-shadow bg-white border border-gray-200 shadow-lg rounded-lg p-8 space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Nom</label>
+              <input name="lastName" type="text" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Prénom</label>
+              <input name="firstName" type="text" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Adresse mail</label>
+              <input name="email" type="email" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Numéro de téléphone</label>
+              <input name="phone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" placeholder="Optionnel" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Type de demande</label>
+              <select name="topic" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
+                <option value="">Sélectionnez</option>
+                <option value="Location d'espaces">Location d'espaces</option>
+                <option value="Booking d'artistes">Booking d'artistes</option>
+                <option value="Gestion de projet">Gestion de projet</option>
+                <option value="Autre">Autre demande</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Budget indicatif</label>
+              <input name="budget" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" placeholder="Ex: 5 000 €" />
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium">Votre message</label>
+            <textarea name="message" rows="6" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" placeholder="Partagez le contexte, les dates et le résultat souhaité."></textarea>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input id="consent" type="checkbox" name="consent" class="h-5 w-5 border-gray-300 rounded focus:ring-2 focus:ring-ink" required />
+            <label for="consent" class="text-sm text-gray-700">J’accepte d’être recontacté par Plaisir partagé à propos de ma demande.</label>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <p id="formStatus" class="text-sm text-gray-600">Un chargé de projet vous répond en 24h ouvrées.</p>
+            <button type="submit" class="border border-ink px-6 py-3 rounded-md hover:bg-black hover:text-white transition font-semibold">Envoyer</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script src="/footer.js"></script>
+  <script src="/stripe-gradient-main/dist/stripe-gradient.js"></script>
+  <script src="/nav.js"></script>
+  <script>
+    const form = document.getElementById("contactForm");
+    const statusEl = document.getElementById("formStatus");
+
+    const clearFieldState = (control) => {
+      control.classList.remove("ring-2", "ring-red-500");
+      const holder = control.parentElement;
+      if (!holder) return;
+      const error = holder.querySelector(".field-error");
+      if (error) error.remove();
+    };
+
+    const markFieldError = (control) => {
+      const holder = control.parentElement;
+      control.classList.add("ring-2", "ring-red-500");
+      if (holder) {
+        let error = holder.querySelector(".field-error");
+        if (!error) {
+          error = document.createElement("p");
+          error.className = "field-error mt-1 text-xs text-red-600";
+          holder.appendChild(error);
+        }
+        error.textContent = control.validationMessage || "Ce champ est requis.";
+      }
+    };
+
+    const attachClearHandlers = () => {
+      document.querySelectorAll("input, select, textarea").forEach((control) => {
+        ["input", "change"].forEach((evt) =>
+          control.addEventListener(evt, () => clearFieldState(control))
+        );
+      });
+    };
+
+    const validateForm = () => {
+      let valid = true;
+      let firstInvalid = null;
+      const controls = form.querySelectorAll("input, select, textarea");
+      controls.forEach((control) => {
+        clearFieldState(control);
+        if (!control.checkValidity()) {
+          markFieldError(control);
+          if (!firstInvalid) firstInvalid = control;
+          valid = false;
+        }
+      });
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstInvalid.focus({ preventScroll: true });
+      }
+      return valid;
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!validateForm()) return;
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        if (data[key]) {
+          data[key] = [].concat(data[key], value);
+        } else {
+          data[key] = value;
+        }
+      });
+
+      if (statusEl) {
+        statusEl.textContent = "Envoi en cours...";
+        statusEl.classList.remove("text-gray-600", "text-red-600");
+        statusEl.classList.add("text-ink", "font-medium");
+      }
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        console.log("Message contact JSON envoyé :", data, "Réponse :", result);
+
+        if (response.ok && result?.success) {
+          if (statusEl) {
+            statusEl.textContent = "Message bien reçu ! Nous revenons vers vous rapidement.";
+          }
+          form.reset();
+          setTimeout(() => {
+            if (statusEl) {
+              statusEl.textContent = "Un chargé de projet vous répond en 24h ouvrées.";
+              statusEl.classList.remove("text-ink", "font-medium", "text-red-600");
+              statusEl.classList.add("text-gray-600");
+            }
+          }, 4000);
+        } else {
+          throw new Error(result?.error || "Réponse serveur non valide");
+        }
+      } catch (err) {
+        console.error("Erreur d'envoi du formulaire :", err);
+        if (statusEl) {
+          statusEl.textContent = "Impossible d'envoyer le message pour le moment. Merci de réessayer.";
+          statusEl.classList.add("text-red-600", "font-medium");
+        }
+      }
+    });
+
+    attachClearHandlers();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.Gradient) {
+        new Gradient({
+          canvas: "#stripe-contact",
+          colors: ["#d72638", "#ff6b6b", "#ffc857", "#8e2de2"]
+        });
+      }
+    });
+  </script>
+</body>
+</html>
