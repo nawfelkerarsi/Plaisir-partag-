@@ -3,7 +3,7 @@
     const placeholder = document.getElementById("footer-placeholder");
     if (!placeholder) return;
     try {
-      const res = await fetch("/footer.html");
+      const res = await fetch("footer.html");
       if (!res.ok) return;
       placeholder.innerHTML = await res.text();
     } catch (err) {

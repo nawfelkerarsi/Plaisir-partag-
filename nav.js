@@ -1,7 +1,7 @@
 (() => {
   const mountNav = async () => {
     try {
-      const res = await fetch("/nav.html");
+      const res = await fetch("nav.html");
       if (!res.ok) return;
       const html = await res.text();
       const placeholder = document.getElementById("navbar-placeholder");
