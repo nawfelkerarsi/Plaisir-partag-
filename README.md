@@ -7,7 +7,7 @@
 
 Site statique pour Plaisir partage (frontend HTML/JS + backend Flask pour l'envoi des formulaires) emballes dans Docker Compose.
 
-![Apercu](src/frontend/assets/2.png)
+![Apercu](src/frontend/assets/5.png)
 
 ## Prerequis
 - Docker et Docker Compose v2
