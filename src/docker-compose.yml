@@ -16,6 +16,8 @@ services:
     container_name: backend
     env_file:
       - .env
+    volumes:
+      - ./backend/logs:/app/logs
     expose:
       - "5000"
     restart: unless-stopped
