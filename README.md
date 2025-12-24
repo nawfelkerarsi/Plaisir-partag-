@@ -15,7 +15,7 @@ Site statique pour Plaisir partage (frontend HTML/JS + backend Flask pour l'envo
 
 ## Demarrage rapide avec Docker
 1) Placer les sources dans `src/` (structure actuelle du repo).
-2) Creer un fichier `src/.env` pour les emails (exemple ci-dessous). Sans configuration SMTP, les formulaires renverront une erreur 500.
+2) Creer un fichier `src/.env` pour les emails et Traefik (exemple ci-dessous). Sans configuration SMTP, les formulaires renverront une erreur 500.
 3) Depuis `src/`, lancer:
    ```bash
    docker compose up --build
@@ -24,6 +24,8 @@ Site statique pour Plaisir partage (frontend HTML/JS + backend Flask pour l'envo
 
 Exemple de fichier `src/.env`:
 ```env
+APP_DOMAIN=recette.exemple.com
+TRAEFIK_ACME_EMAIL=admin@exemple.com
 SMTP_HOST=ssl0.ovh.net
 SMTP_PORT=465
 SMTP_USER=postmaster@plaisirpartage.agency
@@ -32,6 +34,21 @@ SMTP_FROM=postmaster@plaisirpartage.agency
 SMTP_TO=destinataire@exemple.com
 SMTP_STARTTLS=true
 ```
+
+## Mise en recette sur VPS OVH (Traefik)
+1) Creer un enregistrement DNS `A` pour votre domaine de recette vers l'IP du VPS.
+2) Renseigner `APP_DOMAIN` et `TRAEFIK_ACME_EMAIL` dans `src/.env`.
+3) Creer le fichier ACME pour LetsEncrypt:
+   ```bash
+   cd src
+   touch traefik/acme.json
+   chmod 600 traefik/acme.json
+   ```
+4) Lancer la stack recette:
+   ```bash
+   docker compose up -d --build
+   ```
+5) Verifier que les ports 80/443 sont ouverts sur le VPS (pare-feu OVH inclus).
 
 ## Developpement sans Docker
 - Backend Flask:
@@ -44,4 +61,3 @@ SMTP_STARTTLS=true
   gunicorn -b 0.0.0.0:5000 app:app
   ```
 - Frontend statique: depuis `src/frontend`, servir les fichiers avec l'outil de votre choix, par exemple `python -m http.server 8080`. Mettre a jour les appels API pour cibler l'URL du backend si besoin.
-

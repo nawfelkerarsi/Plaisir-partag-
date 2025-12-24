@@ -1,6 +1,23 @@
 version: "3.9"
 
 services:
+  traefik:
+    image: traefik:v2.11
+    command:
+      - "--configFile=/etc/traefik/traefik.yml"
+    environment:
+      TRAEFIK_ACME_EMAIL: ${TRAEFIK_ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/acme.json:/letsencrypt/acme.json
+    networks:
+      - web
+    restart: unless-stopped
+
   frontend:
     image: nginx:alpine
     container_name: frontend
@@ -8,7 +25,19 @@ services:
       - ./frontend:/usr/share/nginx/html:ro
       - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
+    expose:
+      - "80"
+    networks:
+      - web
+      - app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.plaisir.rule=Host(`${APP_DOMAIN}`)"
+      - "traefik.http.routers.plaisir.entrypoints=websecure"
+      - "traefik.http.routers.plaisir.tls=false"
+      - "traefik.http.routers.plaisir.tls.certresolver=letsencrypt"
     restart: unless-stopped
 
   backend:
@@ -20,4 +49,13 @@ services:
       - ./backend/logs:/app/logs
     expose:
       - "5000"
+    networks:
+      - app
     restart: unless-stopped
+
+networks:
+  web:
+    name: traefik-public
+  app:
+    name: plaisir-app
+    internal: true
