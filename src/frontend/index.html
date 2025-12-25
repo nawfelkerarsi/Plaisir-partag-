@@ -8,113 +8,175 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/assets/global.css" />
   <style>
-    html, body { min-height: 100%; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
-    .sketch-border { border: 2px solid #0f0f0f; box-shadow: 6px 6px 0 #0f0f0f, -3px -3px 0 #0f0f0f; }
-    .hero-gradient { position: relative; min-height: 100vh; display: grid; place-items: center; padding: 6rem 1.5rem; overflow: hidden; }
-    .hero-gradient canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .hero-content { position: relative; z-index: 1; max-width: 960px; text-align: center; color: #0f0f0f; }
-    .snap-section { scroll-snap-align: start; scroll-snap-stop: always; min-height: 100vh; }
-    .gradient-shell { position: relative; overflow: hidden; }
-    .gradient-shell::before {
+    :root {
+      --ink: #0f0f0f;
+      --paper: #f7f4ef;
+    }
+    body {
+      overflow-x: hidden;
+    }
+    .hero-frame {
+      position: relative;
+      overflow: visible;
+      height: 300px;
+    }
+    .hero-canvas {
+      position: absolute;
+      inset: -18% -26% -18% -26%;
+      width: auto;
+      height: auto;
+      min-width: 120%;
+      min-height: 120%;
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 8%, #fff 24%, #fff 76%, rgba(255, 255, 255, 0.2) 92%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 8%, #fff 24%, #fff 76%, rgba(255, 255, 255, 0.2) 92%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero-frame::after {
       content: "";
       position: absolute;
-      inset: -30%;
-      background: radial-gradient(60% 60% at 20% 20%, rgba(255, 99, 173, 0.35), transparent),
-                  radial-gradient(50% 50% at 80% 0%, rgba(94, 92, 255, 0.35), transparent),
-                  radial-gradient(50% 50% at 60% 80%, rgba(0, 173, 255, 0.35), transparent),
-                  linear-gradient(130deg, rgba(255, 200, 87, 0.35), rgba(255, 99, 173, 0.25));
-      animation: gradientShift 20s ease-in-out infinite alternate;
-      z-index: 0;
-      transform: rotate(-2deg);
+      background: radial-gradient(50% 50% at 15% 30%, rgba(255, 255, 255, 0.12), transparent),
+                  radial-gradient(60% 60% at 80% 20%, rgba(255, 255, 255, 0.15), transparent),
+                  radial-gradient(70% 70% at 50% 90%, rgba(255, 255, 255, 0.1), transparent);
+      animation: drift 18s ease-in-out infinite alternate;
+      pointer-events: none;
     }
-    .gradient-shell > * { position: relative; z-index: 1; }
-    @keyframes gradientShift {
-      0% { transform: translate3d(0, 0, 0) scale(1) rotate(-2deg); filter: blur(0px); }
-      50% { transform: translate3d(-5%, -3%, 0) scale(1.05) rotate(-1deg); filter: blur(2px); }
-      100% { transform: translate3d(8%, 4%, 0) scale(1.08) rotate(-3deg); filter: blur(3px); }
+    .floating-card {
+      animation: float 8s ease-in-out infinite alternate;
     }
-    .scroll-snap-stop { scroll-snap-stop: always; }
+    .pill-badge {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(6px);
+    }
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(-1deg); }
+      100% { transform: translateY(-12px) rotate(2deg); }
+    }
+    @keyframes drift {
+      0% { transform: translate3d(0, 0, 0) scale(1); filter: blur(0px); }
+      100% { transform: translate3d(3%, -4%, 0) scale(1.05); filter: blur(2px); }
+    }
+    @media (max-width: 768px) {
+      .hero-canvas {
+        inset: -10% -20% -10% -20%;
+        top: -300px;
+        min-width: 130%;
+        min-height: 10%;
+        -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.2) 12%, #fff 78%, transparent 100%);
+        mask-image: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.2) 12%, #fff 78%, transparent 100%);
+      }
+    }
   </style>
 </head>
-<body class="bg-white text-ink" data-nav-transparent="true">
+<body class="text-ink" data-nav-transparent="false">
   <div class="page-shell">
     <div id="navbar-placeholder"></div>
 
-    <main>
-      <section class="hero-gradient snap-section">
-        <canvas id="stripe-hero"></canvas>
-        <div class="hero-content space-y-6">
-          <h1 class="text-4xl md:text-6xl font-black leading-tight text-white drop-shadow-lg">
-            Au cœur de l'évènement
-          </h1>
-          <p class="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-             Nous mettons à votre disposition notre savoir-faire et notre réseau étendu pour répondre à vos besoins, que ce soit en matière de location d’espaces, réservation d’artistes, de DJs ou d’animations. 
-          </p>
-          <div class="flex flex-col md:flex-row items-center justify-center gap-3">
-            <a href="#services" class="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-white text-ink font-semibold shadow hover:bg-white/85 transition">
-              En savoir plus
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </a>
-            <a href="/contact" class="px-6 py-3 rounded-md bg-ink text-white font-semibold hover:bg-white/15 hover:text-ink transition">Parler à l’équipe</a>
+    <main class="pt-0 pb-16 md:pt-26">
+      <section class="max-w-6xl mx-auto px-6">
+        <div class="grid md:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+          <div class="space-y-6 order-2 md:order-1 -mt-10 md:mt-0 md:pb-0">
+            <div class="space-y-3">
+              <p class="uppercase text-xs tracking-[0.32em] text-gray-600 md:pt-40">Plaisir partagé</p>
+              <h1 class="text-4xl md:text-5xl font-black leading-tight">
+                Au cœur de l'évènement
+              </h1>
+              <p class="text-lg text-gray-700 max-w-2xl">
+                Nous mettons à votre disposition notre savoir-faire et notre réseau étendu pour répondre à vos besoins, que ce soit en matière de location d’espaces, réservation d’artistes, de DJs ou d’animations. 
+              </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <a href="#services" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-ink text-white font-semibold shadow-md hover:-translate-y-0.5 transition bg-black">
+                En savoir plus
+                <span aria-hidden="true" class="text-lg">↓</span>
+              </a>
+              <a href="/contact" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md border border-ink font-semibold hover:bg-white transition">
+                Parler à l'équipe
+              </a>
+            </div>
+            </div>
+
+          <div class="relative hero-frame order-1 md:order-2">
+            <canvas id="stripe-hero" class="hero-canvas"></canvas>
+            <div class="relative p-6 space-y-6">
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="snap-section flex items-center" id="services">
-        <div class="max-w-6xl mx-auto px-6 w-full grid md:grid-cols-2 gap-8 items-center mt-10">
-          <div class="space-y-4">
-            <p class="uppercase text-xs tracking-[0.3em] text-gray-500">Nos expertises</p>
-            <h2 class="text-4xl font-black leading-tight">Location d’espaces</h2>
-            <p class="text-gray-700">Clubs, salles de concert, plein air : nous sourçons et sécurisons les lieux adaptés à votre audience, vos contraintes techniques et vos ambitions créatives.</p>
-            <a href="/espaces" class="inline-flex px-6 py-3 rounded-md bg-white border border-ink text-ink font-semibold shadow-sm hover:bg-black hover:text-white transition">Demander un espace</a>
-          </div>
-          <div class="relative order-2 md:order-1 h-[360px] md:h-[460px]">
-            <div class="absolute inset-6 rounded-2xl bg-gradient-to-br from-orange-100 via-pink-50 to-cyan-100 blur-2xl opacity-70"></div>
-            <div class="absolute top-4 left-4 md:left-8 right-20 h-[70%] sketch-border overflow-hidden rounded-xl shadow-2xl bg-white border-4 border-white/80">
-              <img src="assets/1.jpeg" alt="Lumières de salle" class="w-full h-full object-cover">
+      <section id="services" class="max-w-6xl mx-auto px-6 mt-20 space-y-12">
+        <div class="grid md:grid-cols-3 gap-6">
+          <article class="p-5 rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-700 font-bold"></span>
+              <p class="text-sm uppercase tracking-[0.22em] text-gray-600">Locations d'Espaces</p>
             </div>
-            <img src="assets/0.jpeg" alt="Balcon de club" class="absolute w-40 md:w-52 rounded-xl shadow-xl border-4 border-white/80 object-cover right-4 top-8">
-            <img src="assets/niska.jpeg" alt="Ambiance intimiste" class="absolute w-32 md:w-40 rounded-xl shadow-xl border-4 border-white/80 object-cover left-0 bottom-14">
+            <h3 class="text-xl font-bold mb-2">Lorem ipsum</h3>
+            <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate amet natus laboriosam quibusdam</p>
+            <a href="/espaces" class="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:underline">Demander un espace <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="p-5 rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-100 text-pink-700 font-bold"></span>
+              <p class="text-sm uppercase tracking-[0.22em] text-gray-600">Booking d'artistes</p>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Lorem ipsum</h3>
+            <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate amet natus laboriosam quibusdam</p>
+            <a href="/artistes" class="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:underline">Booker un artiste <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="p-5 rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-bold"></span>
+              <p class="text-sm uppercase tracking-[0.22em] text-gray-600">Gestion de Projet</p>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Lorem ipsum</h3>
+            <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate amet natus laboriosam quibusdam</p>
+            <a href="/projets" class="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:underline">Gérer un projet <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="max-w-6xl mx-auto px-6 mt-20 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 items-center">
+        <div class="space-y-4">
+          <h2 class="text-3xl md:text-4xl font-black leading-tight">Ce qui se passe quand tout est aligné</h2>
+          <p class="text-lg text-gray-700">Des décors qui respirent, des artistes alignés avec le propos, un public qui sent la maîtrise. On aime les lignes claires et les émotions qui débordent.</p>
+          <div class="grid sm:grid-cols-2 gap-4 text-sm">
+            <div class="p-4 rounded-xl bg-white/70 shadow-sm border border-black/5">
+              <p class="font-semibold">Direction artistique</p>
+              <p class="text-gray-600">Décor, lumière, scénographie, parcours invité.</p>
+            </div>
+            <div class="p-4 rounded-xl bg-white/70 shadow-sm border border-black/5">
+              <p class="font-semibold">Suivi opérationnel</p>
+              <p class="text-gray-600">Pré-prod, régie, coordination jour J et débrief.</p>
+            </div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="absolute -inset-6 bg-gradient-to-br from-orange-100 via-amber-50 to-pink-100 blur-3xl opacity-70 pointer-events-none"></div>
+          <div class="relative grid grid-cols-2 gap-10">
+            <img src="assets/1.jpeg" alt="Ambiance club" class="rounded-2xl shadow-xl border-4 border-white/80 object-cover w-full h-56 md:h-64">
+            <img src="assets/niska.jpeg" alt="Showcase" class="rounded-2xl shadow-xl border-4 border-white/80 object-cover w-full h-56 md:h-64 translate-y-6">
+            <img src="assets/leto.jpeg" alt="Plateau DJ" class="rounded-2xl shadow-xl border-4 border-white/80 object-cover w-full h-56 md:h-64 -translate-y-6">
+            <img src="assets/soso.jpeg" alt="Public en énergie" class="rounded-2xl shadow-xl border-4 border-white/80 object-cover w-full h-56 md:h-64">
           </div>
         </div>
       </section>
 
-      <section class="snap-section flex items-center bg-gray-50" id="artists">
-        <div class="max-w-6xl mx-auto px-6 w-full grid md:grid-cols-2 gap-8 items-center mt-10">
-          <div class="relative order-2 md:order-1 h-[360px] md:h-[460px]">
-            <div class="absolute inset-6 rounded-2xl bg-gradient-to-br from-indigo-100 via-blue-50 to-emerald-100 blur-2xl opacity-70"></div>
-            <div class="absolute top-6 left-4 right-10 md:right-16 h-[68%] sketch-border overflow-hidden rounded-xl shadow-2xl bg-white border-4 border-white/80">
-              <img src="assets/heuss.jpeg" alt="Artistes et DJ" class="w-full h-full object-cover">
+      <section class="max-w-6xl mx-auto px-6 mt-20">
+        <div class="relative overflow-hidden rounded-3xl border-2 border-ink shadow-[12px_12px_0_#0f0f0f] bg-gradient-to-r from-indigo-900 via-indigo-700 to-pink-600 text-white">
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_35%),radial-gradient(circle_at_80%_10%,white,transparent_30%)]"></div>
+          <div class="relative p-10 flex flex-col lg:flex-row items-center gap-6">
+            <div class="lg:w-2/3 space-y-3">
+              <h3 class="text-3xl font-black leading-tight">Une questions ?</h3>
+              <p class="text-lg text-white/80">Nous revenons vers vous rapidement pour concrétiser votre projet, qu’il s’agisse d’un simple renseignement ou d’une demande complète.</p>
             </div>
-            <img src="assets/leto.jpeg" alt="Vinyle en lumière" class="absolute w-32 md:w-40 rounded-xl shadow-xl border-4 border-white/80 object-cover right-0 top-0">
-            <img src="assets/soso.jpeg" alt="Public en festival" class="absolute w-44 md:w-56 rounded-xl shadow-xl border-4 border-white/80 object-cover right-0 bottom-6">
-          </div>
-          <div class="space-y-4 order-1 md:order-2">
-            <p class="uppercase text-xs tracking-[0.3em] text-gray-500">Nos expertises</p>
-            <h2 class="text-4xl font-black leading-tight">Booking d’artistes</h2>
-            <p class="text-gray-700">DJs, performers, animations : une sélection sur-mesure pour créer des line-up cohérentes et mémorables, avec une logistique fluide.</p>
-            <a href="/artistes" class="inline-flex px-6 py-3 rounded-md bg-white border border-ink text-ink font-semibold shadow-sm hover:bg-black hover:text-white transition">Booker un artiste</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="snap-section flex items-center" id="gestion">
-        <div class="max-w-6xl mx-auto px-6 w-full grid md:grid-cols-2 gap-8 items-center mt-10">
-          <div class="space-y-4">
-            <p class="uppercase text-xs tracking-[0.3em] text-gray-500">Nos expertises</p>
-            <h2 class="text-4xl font-black leading-tight">Gestion de projet</h2>
-            <p class="text-gray-700">Pilotage global : licences, traiteur, technique, sécurité. Nous coordonnons les équipes et les prestataires pour livrer un événement sans friction.</p>
-            <a href="/projets" class="inline-flex px-6 py-3 rounded-md bg-white border border-ink text-ink font-semibold shadow-sm hover:bg-black hover:text-white transition">Gérer un projet</a>
-          </div>
-          <div class="relative h-[360px] md:h-[460px]">
-            <div class="absolute inset-6 rounded-2xl bg-gradient-to-br from-lime-100 via-yellow-50 to-orange-100 blur-2xl opacity-70"></div>
-            <div class="absolute top-10 left-10 right-6 h-[65%] sketch-border overflow-hidden rounded-2xl shadow-2xl bg-white border-4 border-white/80">
-              <img src="assets/3.png" alt="Gestion de projet événementiel" class="w-full h-full object-cover">
+            <div class="flex flex-col sm:flex-row gap-3 lg:ml-auto">
+              <a href="/projets" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md border border-white/60 text-white font-semibold hover:bg-white/10 transition">
+                Nous contacter
+              </a>
             </div>
-            <img src="assets/2.png" alt="Planification détaillée" class="absolute w-36 md:w-48 rounded-xl shadow-xl border-4 border-white/80 object-cover left-0 top-0">
-            <img src="assets/4.webp" alt="Notes et lumière" class="absolute w-32 md:w-40 rounded-xl shadow-xl border-4 border-white/80 object-cover right-2 bottom-10">
           </div>
         </div>
       </section>
@@ -128,12 +190,9 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       if (window.Gradient) {
-        const palette = ["#d72638", "#ff6b6b", "#ffc857", "#8e2de2"];
-        const start = Math.floor(Math.random() * palette.length);
-        const colors = palette.slice(start).concat(palette.slice(0, start));
         new Gradient({
           canvas: "#stripe-hero",
-          colors
+          colors: ["#d72638", "#ff7e67", "#ffc857", "#8e2de2"],
         });
       }
     });

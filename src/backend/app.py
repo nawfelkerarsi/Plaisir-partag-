@@ -34,7 +34,7 @@ def home():
 
 @app.route("/index2")
 def home_index2():
-    return send_from_directory(FRONTEND_DIR, "index2.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 @app.route("/espaces")
 def espaces():
