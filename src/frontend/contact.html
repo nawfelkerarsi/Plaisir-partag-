@@ -64,28 +64,27 @@
 <body class="bg-white text-ink">
   <div id="navbar-placeholder"></div>
   <main class="space-y-16">
-    <section id="formulaire" class="bg-gray-50 py-28">
+    <section id="contact" class="max-w-6xl mx-auto px-6 pt-20">
+      <div class="relative w-full max-w-5xl mx-auto aspect-[3/1] flex items-center justify-center overflow-hidden">
+        <canvas id="stripe-contact" class="absolute inset-0 w-full h-full border border-white"></canvas>
+        <svg class="text-mask-layer w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <mask id="contact-cut">
+              <rect width="100%" height="100%" fill="white"></rect>
+              <text x="50%" y="75%" text-anchor="middle" font-size="32" fill="black" letter-spacing="2">CONTACT</text>
+            </mask>
+          </defs>
+          <rect width="100%" height="100%" fill="white" mask="url(#contact-cut)"></rect>
+        </svg>
+      </div>
+    </section>
+
+    <section id="formulaire" class="bg-gray-50 py-14 !mt-0">
       <div class="max-w-5xl mx-auto px-6 space-y-8">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div class="space-y-2">
-            <p class="uppercase text-xs tracking-[0.2em] text-gray-500">Formulaire</p>
-            <h2 class="text-3xl font-semibold">Entrons en contact</h2>
-            <p class="text-gray-600 max-w-2xl">Expliquez-nous votre besoin : nous revenons vers vous rapidement pour concrétiser votre projet, qu’il s’agisse d’un simple renseignement ou d’une demande complète.</p>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm w-full md:w-auto">
-            <div class="flex items-center gap-3 border border-gray-200 rounded-lg bg-white px-4 py-3 shadow-sm">
-              <div>
-                <p class="font-semibold text-ink">Par téléphone</p>
-                <p class="text-gray-600">Une équipe disponible pour vous rappeler</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-3 border border-gray-200 rounded-lg bg-white px-4 py-3 shadow-sm">
-              <div>
-                <p class="font-semibold text-ink">Par e-mail</p>
-                <p class="text-gray-600">Réponse sous 24h ouvrées</p>
-              </div>
-            </div>
-          </div>
+        <div class="space-y-2">
+          <p class="uppercase text-xs tracking-[0.2em] text-gray-500">Formulaire</p>
+          <h2 class="text-3xl font-semibold">Entrons en contact</h2>
+          <p class="text-gray-600 max-w-2xl">Expliquez-nous votre besoin : nous revenons vers vous rapidement pour concrétiser votre projet, qu’il s’agisse d’un simple renseignement ou d’une demande complète.</p>
         </div>
 
         <form id="contactForm" novalidate class="contact-animated-shadow bg-white border border-gray-200 shadow-lg rounded-lg p-8 space-y-8">
@@ -107,7 +106,7 @@
             </div>
             <div class="space-y-2">
               <label class="block text-sm font-medium">Numéro de téléphone</label>
-              <input name="phone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" placeholder="Optionnel" />
+              <input name="phone" type="tel" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" />
             </div>
           </div>
 
@@ -133,13 +132,19 @@
             <textarea name="message" rows="6" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" placeholder="Partagez le contexte, les dates et le résultat souhaité."></textarea>
           </div>
 
-          <div class="flex items-center gap-3">
-            <input id="consent" type="checkbox" name="consent" class="h-5 w-5 border-gray-300 rounded focus:ring-2 focus:ring-ink" required />
-            <label for="consent" class="text-sm text-gray-700">J’accepte d’être recontacté par Plaisir partagé à propos de ma demande.</label>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <input id="consentEmail" type="checkbox" name="consentEmail" class="h-5 w-5 border-gray-300 rounded focus:ring-2 focus:ring-ink" />
+              <label for="consentEmail" class="text-sm text-gray-700">J’accepte d’être recontacté par Plaisir partagé par mail à propos de ma demande.</label>
+            </div>
+            <div class="flex items-center gap-3">
+              <input id="consentPhone" type="checkbox" name="consentPhone" class="h-5 w-5 border-gray-300 rounded focus:ring-2 focus:ring-ink" />
+              <label for="consentPhone" class="text-sm text-gray-700">J’accepte d’être recontacté par Plaisir partagé par téléphone à propos de ma demande.</label>
+            </div>
           </div>
 
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <p id="formStatus" class="text-sm text-gray-600">Un chargé de projet vous répond en 24h ouvrées.</p>
+            <p id="formStatus" class="text-sm text-gray-600">Nous vous répondrons dans les meilleurs délais.</p>
             <button type="submit" class="border border-ink px-6 py-3 rounded-md hover:bg-black hover:text-white transition font-semibold">Envoyer</button>
           </div>
         </form>
@@ -154,6 +159,8 @@
   <script>
     const form = document.getElementById("contactForm");
     const statusEl = document.getElementById("formStatus");
+    const consentEmail = document.getElementById("consentEmail");
+    const consentPhone = document.getElementById("consentPhone");
     const normalizeDigits = (value) => value.replace(/\D/g, "");
 
     const validatePhone = (control) => {
@@ -171,8 +178,17 @@
       }
     };
 
+    const validateConsent = () => {
+      if (!consentEmail || !consentPhone) return;
+      const hasConsent = consentEmail.checked || consentPhone.checked;
+      const message = hasConsent ? "" : "Merci de choisir au moins un mode de contact.";
+      consentEmail.setCustomValidity(message);
+      consentPhone.setCustomValidity(message);
+    };
+
     const applyCustomValidity = (control) => {
       if (control.name === "phone") validatePhone(control);
+      if (control === consentEmail || control === consentPhone) validateConsent();
     };
 
     const clearFieldState = (control) => {
@@ -263,7 +279,7 @@
           form.reset();
           setTimeout(() => {
             if (statusEl) {
-              statusEl.textContent = "Un chargé de projet vous répond en 24h ouvrées.";
+              statusEl.textContent = "Nous vous répondrons dans les meilleurs délais.";
               statusEl.classList.remove("text-ink", "font-medium", "text-red-600");
               statusEl.classList.add("text-gray-600");
             }
