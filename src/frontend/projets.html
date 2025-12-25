@@ -15,7 +15,7 @@
   <main class="space-y-16">
     <section id="projets" class="max-w-6xl mx-auto px-6 pt-20">
       <div class="relative w-full max-w-5xl mx-auto aspect-[3/1] flex items-center justify-center overflow-hidden">
-        <canvas id="stripe-projets" class="absolute inset-0 w-full h-full border border-white"></canvas>
+        <img id="stripe-projets" src="assets/1.jpeg" alt="" class="absolute inset-0 w-full h-full border border-white object-cover">
         <svg class="text-mask-layer w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
           <defs>
             <mask id="projets-cut">
@@ -617,24 +617,29 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-      if (window.Gradient) {
-        const palette = ["#d72638", "#ff6b6b", "#ffc857", "#8e2de2"];
-        const start = Math.floor(Math.random() * palette.length);
-        const colors = palette.slice(start).concat(palette.slice(0, start));
-        const gradient = new Gradient({
-          canvas: "#stripe-projets",
-          colors
-        });
-        const speedBoost = 1.8;
-        const uniforms = gradient.uniforms || {};
-        uniforms.u_global?.value?.noiseSpeed && (uniforms.u_global.value.noiseSpeed.value *= speedBoost);
-        uniforms.u_vertDeform?.value?.noiseSpeed && (uniforms.u_vertDeform.value.noiseSpeed.value *= speedBoost);
-        uniforms.u_vertDeform?.value?.noiseFlow && (uniforms.u_vertDeform.value.noiseFlow.value *= speedBoost);
-        uniforms.u_waveLayers?.value?.forEach((layer) => {
-          layer?.value?.noiseSpeed && (layer.value.noiseSpeed.value *= speedBoost);
-          layer?.value?.noiseFlow && (layer.value.noiseFlow.value *= speedBoost);
-        });
+      if (!window.Gradient) {
+        return;
       }
+      const canvas = document.querySelector("#stripe-projets");
+      if (!(canvas instanceof HTMLCanvasElement)) {
+        return;
+      }
+      const palette = ["#d72638", "#ff6b6b", "#ffc857", "#8e2de2"];
+      const start = Math.floor(Math.random() * palette.length);
+      const colors = palette.slice(start).concat(palette.slice(0, start));
+      const gradient = new Gradient({
+        canvas,
+        colors
+      });
+      const speedBoost = 1.8;
+      const uniforms = gradient.uniforms || {};
+      uniforms.u_global?.value?.noiseSpeed && (uniforms.u_global.value.noiseSpeed.value *= speedBoost);
+      uniforms.u_vertDeform?.value?.noiseSpeed && (uniforms.u_vertDeform.value.noiseSpeed.value *= speedBoost);
+      uniforms.u_vertDeform?.value?.noiseFlow && (uniforms.u_vertDeform.value.noiseFlow.value *= speedBoost);
+      uniforms.u_waveLayers?.value?.forEach((layer) => {
+        layer?.value?.noiseSpeed && (layer.value.noiseSpeed.value *= speedBoost);
+        layer?.value?.noiseFlow && (layer.value.noiseFlow.value *= speedBoost);
+      });
     });
 
   </script>
