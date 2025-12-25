@@ -59,11 +59,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
                 <label class="block text-sm font-medium">Type d'événement</label>
-                <select name="eventType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
+                <select id="projectEventType" name="eventType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
                   <option value="">Sélectionnez</option>
                   <option value="Étudiant">Étudiant</option>
                   <option value="Entreprise">Entreprise</option>
                   <option value="Collectivité">Collectivité</option>
+                  <option value="Particulier">Particulier</option>
                 </select>
               </div>
               <div class="space-y-2">
@@ -92,11 +93,6 @@
                 <label class="block text-sm font-medium">Adresse de facturation</label>
                 <input name="billingAddress" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <input id="projectIsIndividual" name="particulier" type="checkbox" class="h-5 w-5 border-gray-300 rounded focus:ring-2 focus:ring-ink" />
-              <label for="projectIsIndividual" class="text-sm text-gray-700">Particulier</label>
             </div>
 
             <div id="projectOrgFields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -452,13 +448,13 @@
       })
     );
 
-    const individualToggle = document.getElementById("projectIsIndividual");
+    const eventTypeSelect = document.getElementById("projectEventType");
     const orgFields = document.getElementById("projectOrgFields");
     const companyField = document.querySelector('[name="companyName"]');
     const siretField = document.querySelector('[name="siret"]');
 
     const toggleOrgFields = () => {
-      const isIndividual = individualToggle?.checked;
+      const isIndividual = eventTypeSelect?.value === "Particulier";
       if (orgFields) orgFields.classList.toggle("hidden", isIndividual);
       [companyField, siretField].forEach((field) => {
         if (!field) return;
@@ -473,8 +469,8 @@
       });
     };
 
-    if (individualToggle) {
-      individualToggle.addEventListener("change", toggleOrgFields);
+    if (eventTypeSelect) {
+      eventTypeSelect.addEventListener("change", toggleOrgFields);
       toggleOrgFields();
     }
 

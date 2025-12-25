@@ -61,6 +61,7 @@
                   <option value="Étudiant">Étudiant</option>
                   <option value="Entreprise">Entreprise</option>
                   <option value="Collectivité">Collectivité</option>
+                  <option value="Particulier">Particulier</option>
                 </select>
               </div>
               <div class="space-y-2">
@@ -111,10 +112,6 @@
                 <label class="block text-sm font-medium">Numéro de téléphone</label>
                 <input name="phone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <input id="spaceIsIndividual" name="particulier" type="checkbox" class="h-5 w-5 border-gray-300 rounded focus:ring-2 focus:ring-ink" />
-              <label for="spaceIsIndividual" class="text-sm text-gray-700">Particulier</label>
             </div>
             <div id="spaceOrgFields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
@@ -405,13 +402,13 @@
 
     wireRadioReveal("extraHoursNeeded", extraWrap, extraHours);
     wireRadioReveal("setupHoursNeeded", setupWrap, setupHours);
-    const individualToggle = document.getElementById("spaceIsIndividual");
+    const eventTypeSelect = document.getElementById("eventType");
     const orgFields = document.getElementById("spaceOrgFields");
     const companyField = document.querySelector('[name="companyName"]');
     const siretField = document.querySelector('[name="siret"]');
 
     const toggleOrgFields = () => {
-      const isIndividual = individualToggle?.checked;
+      const isIndividual = eventTypeSelect?.value === "Particulier";
       if (orgFields) orgFields.classList.toggle("hidden", isIndividual);
       [companyField, siretField].forEach((field) => {
         if (!field) return;
@@ -426,8 +423,8 @@
       });
     };
 
-    if (individualToggle) {
-      individualToggle.addEventListener("change", toggleOrgFields);
+    if (eventTypeSelect) {
+      eventTypeSelect.addEventListener("change", toggleOrgFields);
       toggleOrgFields();
     }
     attachClearHandlers();
