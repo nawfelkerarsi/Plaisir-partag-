@@ -24,8 +24,6 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html:ro
       - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    ports:
-      - "127.0.0.1:8080:80"
     expose:
       - "80"
     networks:
@@ -33,10 +31,9 @@ services:
       - app
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.plaisir.rule=Host(`${APP_DOMAIN}`)"
       - "traefik.http.routers.plaisir.entrypoints=websecure"
-      - "traefik.http.routers.plaisir.tls=false"
+      - "traefik.http.routers.plaisir.tls=true"
       - "traefik.http.routers.plaisir.tls.certresolver=letsencrypt"
     restart: unless-stopped
 
