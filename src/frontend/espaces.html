@@ -112,7 +112,11 @@
                 <input name="phone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center gap-3">
+              <input id="spaceIsIndividual" name="particulier" type="checkbox" class="h-5 w-5 border-gray-300 rounded focus:ring-2 focus:ring-ink" />
+              <label for="spaceIsIndividual" class="text-sm text-gray-700">Particulier</label>
+            </div>
+            <div id="spaceOrgFields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
                 <label class="block text-sm font-medium">Dénomination sociale</label>
                 <input name="companyName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
@@ -270,6 +274,48 @@
       });
     };
 
+    const normalizeDigits = (value) => value.replace(/\D/g, "");
+    const normalizeOrgId = (value) => value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+
+    const validatePhone = (control) => {
+      if (!control) return;
+      const raw = control.value.trim();
+      if (!raw) {
+        control.setCustomValidity("");
+        return;
+      }
+      const digits = normalizeDigits(raw);
+      if (digits.length !== 10) {
+        control.setCustomValidity("Le numéro de téléphone doit contenir 10 chiffres.");
+      } else {
+        control.setCustomValidity("");
+      }
+    };
+
+    const validateSiret = (control) => {
+      if (!control) return;
+      const raw = control.value.trim();
+      if (!raw) {
+        control.setCustomValidity("");
+        return;
+      }
+      const normalized = normalizeOrgId(raw);
+      const isSiret = /^\d{14}$/.test(normalized);
+      const isRna = /^W\d{9}$/.test(normalized);
+      if (!isSiret && !isRna) {
+        control.setCustomValidity(
+          "Le SIRET doit contenir 14 chiffres ou le RNA doit commencer par W suivi de 9 chiffres."
+        );
+      } else {
+        control.setCustomValidity("");
+      }
+    };
+
+    const applyCustomValidity = (control) => {
+      if (control.name === "phone") validatePhone(control);
+      if (control.name === "siret") validateSiret(control);
+    };
+
     const clearFieldState = (control) => {
       control.classList.remove("ring-2", "ring-red-500");
       const holder = control.parentElement;
@@ -297,7 +343,10 @@
     const attachClearHandlers = () => {
       document.querySelectorAll("input, select, textarea").forEach((control) => {
         ["input", "change"].forEach((evt) =>
-          control.addEventListener(evt, () => clearFieldState(control))
+          control.addEventListener(evt, () => {
+            applyCustomValidity(control);
+            clearFieldState(control);
+          })
         );
       });
     };
@@ -310,6 +359,7 @@
         clearFieldState(control);
         const hiddenAncestor = control.closest(".hidden");
         if (hiddenAncestor && !(ignoreStepHidden && hiddenAncestor === panel)) continue;
+        applyCustomValidity(control);
         if (!control.checkValidity()) {
           markFieldError(control);
           return false;
@@ -355,6 +405,31 @@
 
     wireRadioReveal("extraHoursNeeded", extraWrap, extraHours);
     wireRadioReveal("setupHoursNeeded", setupWrap, setupHours);
+    const individualToggle = document.getElementById("spaceIsIndividual");
+    const orgFields = document.getElementById("spaceOrgFields");
+    const companyField = document.querySelector('[name="companyName"]');
+    const siretField = document.querySelector('[name="siret"]');
+
+    const toggleOrgFields = () => {
+      const isIndividual = individualToggle?.checked;
+      if (orgFields) orgFields.classList.toggle("hidden", isIndividual);
+      [companyField, siretField].forEach((field) => {
+        if (!field) return;
+        if (isIndividual) {
+          field.removeAttribute("required");
+          field.value = "";
+          field.setCustomValidity("");
+          clearFieldState(field);
+        } else {
+          field.setAttribute("required", "true");
+        }
+      });
+    };
+
+    if (individualToggle) {
+      individualToggle.addEventListener("change", toggleOrgFields);
+      toggleOrgFields();
+    }
     attachClearHandlers();
 
     const form = document.getElementById("spaceForm");
@@ -405,6 +480,7 @@
           goToStep(1);
           toggleDetail("extraHoursNeeded", extraWrap, extraHours);
           toggleDetail("setupHoursNeeded", setupWrap, setupHours);
+          toggleOrgFields();
           setTimeout(() => setStatus("Un chargé de projet vous répond en 24h ouvrées.", "idle"), 4000);
         } else {
           throw new Error(result?.error || "Réponse serveur non valide");

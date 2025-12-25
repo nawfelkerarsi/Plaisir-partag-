@@ -154,6 +154,26 @@
   <script>
     const form = document.getElementById("contactForm");
     const statusEl = document.getElementById("formStatus");
+    const normalizeDigits = (value) => value.replace(/\D/g, "");
+
+    const validatePhone = (control) => {
+      if (!control) return;
+      const raw = control.value.trim();
+      if (!raw) {
+        control.setCustomValidity("");
+        return;
+      }
+      const digits = normalizeDigits(raw);
+      if (digits.length !== 10) {
+        control.setCustomValidity("Le numéro de téléphone doit contenir 10 chiffres.");
+      } else {
+        control.setCustomValidity("");
+      }
+    };
+
+    const applyCustomValidity = (control) => {
+      if (control.name === "phone") validatePhone(control);
+    };
 
     const clearFieldState = (control) => {
       control.classList.remove("ring-2", "ring-red-500");
@@ -180,7 +200,10 @@
     const attachClearHandlers = () => {
       document.querySelectorAll("input, select, textarea").forEach((control) => {
         ["input", "change"].forEach((evt) =>
-          control.addEventListener(evt, () => clearFieldState(control))
+          control.addEventListener(evt, () => {
+            applyCustomValidity(control);
+            clearFieldState(control);
+          })
         );
       });
     };
@@ -191,6 +214,7 @@
       const controls = form.querySelectorAll("input, select, textarea");
       controls.forEach((control) => {
         clearFieldState(control);
+        applyCustomValidity(control);
         if (!control.checkValidity()) {
           markFieldError(control);
           if (!firstInvalid) firstInvalid = control;
