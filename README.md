@@ -26,6 +26,7 @@ Exemple de fichier `src/.env`:
 ```env
 APP_DOMAIN=recette.exemple.com
 TRAEFIK_ACME_EMAIL=admin@exemple.com
+TRAEFIK_ACME_CA_SERVER=https://acme-v02.api.letsencrypt.org/directory
 SMTP_HOST=ssl0.ovh.net
 SMTP_PORT=465
 SMTP_USER=postmaster@plaisirpartage.agency
@@ -38,6 +39,7 @@ SMTP_STARTTLS=true
 ## Mise en recette sur VPS OVH (Traefik)
 1) Creer un enregistrement DNS `A` pour votre domaine de recette vers l'IP du VPS.
 2) Renseigner `APP_DOMAIN` et `TRAEFIK_ACME_EMAIL` dans `src/.env`.
+   - Optionnel pour les tests: `TRAEFIK_ACME_CA_SERVER=https://acme-staging-v02.api.letsencrypt.org/directory` (certificat non valide pour le navigateur).
 3) Creer le fichier ACME pour LetsEncrypt:
    ```bash
    cd src

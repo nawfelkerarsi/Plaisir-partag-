@@ -7,6 +7,7 @@ services:
       - "--configFile=/etc/traefik/traefik.yml"
     environment:
       TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL: ${TRAEFIK_ACME_EMAIL}
+      TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_CASERVER: ${TRAEFIK_ACME_CA_SERVER}
     ports:
       - "80:80"
       - "443:443"
