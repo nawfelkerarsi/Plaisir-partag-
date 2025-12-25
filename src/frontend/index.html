@@ -103,32 +103,47 @@
 
       <section id="services" class="max-w-6xl mx-auto px-6 mt-20 space-y-12">
         <div class="grid md:grid-cols-3 gap-6">
-          <article class="p-5 rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-700 font-bold"></span>
-              <p class="text-sm uppercase tracking-[0.22em] text-gray-600">Location</p>
-            </div>
-            <h3 class="text-xl font-bold mb-2">Lorem ipsum</h3>
-            <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate amet natus laboriosam quibusdam</p>
-            <a href="/espaces" class="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:underline">Demander un espace <span aria-hidden="true">→</span></a>
+          <article class="rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition overflow-hidden">
+            <a href="/espaces" class="block relative w-full aspect-[3/1]">
+              <canvas id="stripe-espaces" class="absolute inset-0 w-full h-full border border-white"></canvas>
+              <svg class="text-mask-layer w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <mask id="espaces-cut">
+                    <rect width="100%" height="100%" fill="white"></rect>
+                    <text x="50%" y="75%" text-anchor="middle" font-size="30" fill="black" letter-spacing="2">ESPACES</text>
+                  </mask>
+                </defs>
+                <rect width="100%" height="100%" fill="white" mask="url(#espaces-cut)"></rect>
+              </svg>
+            </a>
           </article>
-          <article class="p-5 rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-pink-100 text-pink-700 font-bold"></span>
-              <p class="text-sm uppercase tracking-[0.22em] text-gray-600">Celebrities</p>
-            </div>
-            <h3 class="text-xl font-bold mb-2">Lorem ipsum</h3>
-            <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate amet natus laboriosam quibusdam</p>
-            <a href="/artistes" class="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:underline">Booker un artiste <span aria-hidden="true">→</span></a>
+          <article class="rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition overflow-hidden">
+            <a href="/artistes" class="block relative w-full aspect-[3/1]">
+              <canvas id="stripe-artistes" class="absolute inset-0 w-full h-full border border-white"></canvas>
+              <svg class="text-mask-layer w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <mask id="artistes-cut">
+                    <rect width="100%" height="100%" fill="white"></rect>
+                    <text x="50%" y="75%" text-anchor="middle" font-size="27" fill="black" letter-spacing="2">ARTISTES</text>
+                  </mask>
+                </defs>
+                <rect width="100%" height="100%" fill="white" mask="url(#artistes-cut)"></rect>
+              </svg>
+            </a>
           </article>
-          <article class="p-5 rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition">
-            <div class="flex items-center gap-2 mb-3">
-              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-bold"></span>
-              <p class="text-sm uppercase tracking-[0.22em] text-gray-600">Project</p>
-            </div>
-            <h3 class="text-xl font-bold mb-2">Lorem ipsum</h3>
-            <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate amet natus laboriosam quibusdam</p>
-            <a href="/projets" class="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:underline">Gérer un projet <span aria-hidden="true">→</span></a>
+          <article class="rounded-2xl bg-white/95 shadow-lg border border-black/5 hover:-translate-y-1 transition overflow-hidden">
+            <a href="/projets" class="block relative w-full aspect-[3/1]">
+              <canvas id="stripe-projets" class="absolute inset-0 w-full h-full border border-white"></canvas>
+              <svg class="text-mask-layer w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <mask id="projets-cut">
+                    <rect width="100%" height="100%" fill="white"></rect>
+                    <text x="50%" y="75%" text-anchor="middle" font-size="32" fill="black" letter-spacing="2">PROJETS</text>
+                  </mask>
+                </defs>
+                <rect width="100%" height="100%" fill="white" mask="url(#projets-cut)"></rect>
+              </svg>
+            </a>
           </article>
         </div>
       </section>
@@ -172,12 +187,39 @@
   <script src="/nav.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      if (window.Gradient) {
-        new Gradient({
-          canvas: "#stripe-hero",
-          colors: ["#312e81", "#4338ca", "#db2777"],
-        });
+      if (!window.Gradient) {
+        return;
       }
+
+      const initStripe = (selector, colors, speedBoost) => {
+        if (!document.querySelector(selector)) {
+          return;
+        }
+        const gradient = new Gradient({ canvas: selector, colors });
+        if (!speedBoost) {
+          return;
+        }
+        const uniforms = gradient.uniforms || {};
+        uniforms.u_global?.value?.noiseSpeed && (uniforms.u_global.value.noiseSpeed.value *= speedBoost);
+        uniforms.u_vertDeform?.value?.noiseSpeed && (uniforms.u_vertDeform.value.noiseSpeed.value *= speedBoost);
+        uniforms.u_vertDeform?.value?.noiseFlow && (uniforms.u_vertDeform.value.noiseFlow.value *= speedBoost);
+        uniforms.u_waveLayers?.value?.forEach((layer) => {
+          layer?.value?.noiseSpeed && (layer.value.noiseSpeed.value *= speedBoost);
+          layer?.value?.noiseFlow && (layer.value.noiseFlow.value *= speedBoost);
+        });
+      };
+
+      initStripe("#stripe-hero", ["#312e81", "#4338ca", "#db2777"]);
+
+      const makeStripeColors = () => {
+        const palette = ["#d72638", "#ff6b6b", "#ffc857", "#8e2de2"];
+        const start = Math.floor(Math.random() * palette.length);
+        return palette.slice(start).concat(palette.slice(0, start));
+      };
+
+      ["#stripe-espaces", "#stripe-artistes", "#stripe-projets"].forEach((selector) => {
+        initStripe(selector, makeStripeColors(), 1.8);
+      });
     });
   </script>
 </body>
