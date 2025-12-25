@@ -4,9 +4,16 @@ entryPoints:
   websecure:
     address: ":443"
 
+api:
+  dashboard: true
+
 providers:
   docker:
     exposedByDefault: false
+
+metrics:
+  prometheus:
+    manualRouting: true
 
 certificatesResolvers:
   letsencrypt:

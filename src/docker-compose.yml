@@ -7,7 +7,7 @@ services:
       - "--configFile=/etc/traefik/traefik.yml"
     environment:
       TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL: ${TRAEFIK_ACME_EMAIL}
-      TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_CASERVER: ${TRAEFIK_ACME_CA_SERVER}
+      TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_CASERVER: ${TRAEFIK_ACME_CA_SERVER:-https://acme-v02.api.letsencrypt.org/directory}
     ports:
       - "80:80"
       - "443:443"
@@ -17,6 +17,21 @@ services:
       - ./traefik/acme.json:/letsencrypt/acme.json
     networks:
       - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`${TRAEFIK_DASHBOARD_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.traefik-dashboard.tls=true"
+      - "traefik.http.routers.traefik-dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik-dashboard.service=api@internal"
+      - "traefik.http.routers.traefik-dashboard.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-metrics.rule=Host(`${TRAEFIK_DASHBOARD_DOMAIN}`) && PathPrefix(`/metrics`)"
+      - "traefik.http.routers.traefik-metrics.entrypoints=websecure"
+      - "traefik.http.routers.traefik-metrics.tls=true"
+      - "traefik.http.routers.traefik-metrics.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik-metrics.service=prometheus@internal"
+      - "traefik.http.routers.traefik-metrics.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_USERS}"
     restart: unless-stopped
 
   frontend:
@@ -32,10 +47,12 @@ services:
       - app
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.plaisir.rule=Host(`${APP_DOMAIN}`)"
       - "traefik.http.routers.plaisir.entrypoints=websecure"
       - "traefik.http.routers.plaisir.tls=true"
       - "traefik.http.routers.plaisir.tls.certresolver=letsencrypt"
+      - "traefik.http.services.plaisir.loadbalancer.server.port=80"
     restart: unless-stopped
 
   backend:

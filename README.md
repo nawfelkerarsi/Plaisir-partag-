@@ -27,6 +27,9 @@ Exemple de fichier `src/.env`:
 APP_DOMAIN=recette.exemple.com
 TRAEFIK_ACME_EMAIL=admin@exemple.com
 TRAEFIK_ACME_CA_SERVER=https://acme-v02.api.letsencrypt.org/directory
+TRAEFIK_DASHBOARD_DOMAIN=traefik.recette.exemple.com
+# Generer avec: htpasswd -nbB admin 'motdepasse' (remplacer $ par $$ dans .env)
+TRAEFIK_DASHBOARD_USERS=admin:CHANGE_ME
 SMTP_HOST=ssl0.ovh.net
 SMTP_PORT=465
 SMTP_USER=postmaster@plaisirpartage.agency
@@ -40,6 +43,8 @@ SMTP_STARTTLS=true
 1) Creer un enregistrement DNS `A` pour votre domaine de recette vers l'IP du VPS.
 2) Renseigner `APP_DOMAIN` et `TRAEFIK_ACME_EMAIL` dans `src/.env`.
    - Optionnel pour les tests: `TRAEFIK_ACME_CA_SERVER=https://acme-staging-v02.api.letsencrypt.org/directory` (certificat non valide pour le navigateur).
+   - Pour le dashboard Traefik, ajouter un sous-domaine (ex: `traefik.recette.exemple.com`) et definir `TRAEFIK_DASHBOARD_DOMAIN` + `TRAEFIK_DASHBOARD_USERS`. Acces via `https://<domaine>/dashboard/`.
+   - Metriques Prometheus disponibles sur `https://<domaine>/metrics` (protegees par le meme basic auth).
 3) Creer le fichier ACME pour LetsEncrypt:
    ```bash
    cd src
