@@ -231,6 +231,19 @@
               </div>
             </div>
             <div class="space-y-2">
+              <label class="block text-sm font-medium">Besoin d'un artiste ?</label>
+              <div class="flex gap-3">
+                <label class="flex-1">
+                  <input type="radio" name="needArtist" value="Oui" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-blue-600 peer-checked:text-white transition cursor-pointer">Oui</span>
+                </label>
+                <label class="flex-1">
+                  <input type="radio" name="needArtist" value="Non" class="peer sr-only" required />
+                  <span class="block w-full text-center border border-ink rounded-md px-3 py-2 peer-checked:bg-red-600 peer-checked:text-white transition cursor-pointer">Non</span>
+                </label>
+              </div>
+            </div>
+            <div class="space-y-2">
               <label class="block text-sm font-medium">Message : veuillez affiner votre demande</label>
               <textarea name="message" rows="4" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none"></textarea>
             </div>
