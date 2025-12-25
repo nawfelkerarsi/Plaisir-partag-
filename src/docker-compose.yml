@@ -65,7 +65,16 @@ services:
     expose:
       - "5000"
     networks:
+      - web
       - app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
+      - "traefik.http.routers.plaisir-api.rule=Host(`${APP_DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.plaisir-api.entrypoints=websecure"
+      - "traefik.http.routers.plaisir-api.tls=true"
+      - "traefik.http.routers.plaisir-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.plaisir-api.loadbalancer.server.port=5000"
     restart: unless-stopped
 
 networks:
