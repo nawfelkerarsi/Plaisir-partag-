@@ -50,6 +50,12 @@
       border: 1px solid rgba(0, 0, 0, 0.06);
       backdrop-filter: blur(6px);
     }
+    .service-thumb {
+      background-image: url("assets/1.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
     @keyframes float {
       0% { transform: translateY(0px) rotate(-1deg); }
       100% { transform: translateY(-12px) rotate(2deg); }
@@ -104,8 +110,7 @@
       <section id="services" class="max-w-6xl mx-auto px-6 md:mt-40 mt-10 space-y-12">
         <div class="grid md:grid-cols-3 gap-6">
           <article class="rounded-2xl bg-white shadow-lg border border-black/5 hover:-translate-y-1 transition overflow-hidden pb-2">
-            <a href="/espaces" class="block relative w-full aspect-[3/1]">
-              <canvas id="stripe-espaces" class="absolute inset-0 w-full h-full border border-white px-5 py-5"></canvas>
+            <a href="/espaces" class="block relative w-full aspect-[3/1] service-thumb">
               <div class="text-mask-layer px-5">
                 <svg class="w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
                   <defs>
@@ -123,8 +128,7 @@
             </div>
           </article>
           <article class="rounded-2xl bg-white shadow-lg border border-black/5 hover:-translate-y-1 transition overflow-hidden pb-2">
-            <a href="/artistes" class="block relative w-full aspect-[3/1]">
-              <canvas id="stripe-artistes" class="absolute inset-0 w-full h-full border border-white px-5 py-5"></canvas>
+            <a href="/artistes" class="block relative w-full aspect-[3/1] service-thumb">
               <div class="text-mask-layer px-5">
                 <svg class="w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
                   <defs>
@@ -142,8 +146,7 @@
             </div>
           </article>
           <article class="rounded-2xl bg-white shadow-lg border border-black/5 hover:-translate-y-1 transition overflow-hidden pb-2">
-            <a href="/projets" class="block relative w-full aspect-[3/1]">
-              <canvas id="stripe-projets" class="absolute inset-0 w-full h-full border border-white px-5 py-5"></canvas>
+            <a href="/projets" class="block relative w-full aspect-[3/1] service-thumb">
               <div class="text-mask-layer px-5">
                 <svg class="w-full h-full" viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
                   <defs>
@@ -226,15 +229,6 @@
 
       initStripe("#stripe-hero", ["#312e81", "#4338ca", "#db2777"]);
 
-      const makeStripeColors = () => {
-        const palette = ["#d72638", "#ff6b6b", "#ffc857", "#8e2de2"];
-        const start = Math.floor(Math.random() * palette.length);
-        return palette.slice(start).concat(palette.slice(0, start));
-      };
-
-      ["#stripe-espaces", "#stripe-artistes", "#stripe-projets"].forEach((selector) => {
-        initStripe(selector, makeStripeColors(), 1.8);
-      });
     });
   </script>
 </body>
