@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plaisir partagé — Artistes</title>
+  <title>Plaisir Partagé — Artistes</title>
 
   <script src="/assets/theme.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -98,8 +98,8 @@
                 <input id="artistCompany" name="companyName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Numéro de SIRET / RNA</label>
-                <input id="artistSiret" name="siret" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
+                <label class="block text-sm font-medium">Numéro de SIRET (9 chiffres)</label>
+                <input id="artistSiret" name="siret" type="text" inputmode="numeric" pattern="[0-9]{9}" maxlength="9" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
@@ -223,7 +223,6 @@
     };
 
     const normalizeDigits = (value) => value.replace(/\D/g, "");
-    const normalizeOrgId = (value) => value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
 
     const validatePhone = (control) => {
       if (!control) return;
@@ -247,13 +246,9 @@
         control.setCustomValidity("");
         return;
       }
-      const normalized = normalizeOrgId(raw);
-      const isSiret = /^\d{14}$/.test(normalized);
-      const isRna = /^W\d{9}$/.test(normalized);
-      if (!isSiret && !isRna) {
-        control.setCustomValidity(
-          "Le SIRET doit contenir 14 chiffres ou le RNA doit commencer par W suivi de 9 chiffres."
-        );
+      const digits = normalizeDigits(raw);
+      if (digits.length !== 9) {
+        control.setCustomValidity("Le SIRET doit contenir 9 chiffres.");
       } else {
         control.setCustomValidity("");
       }
