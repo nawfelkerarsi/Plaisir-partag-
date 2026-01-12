@@ -17,7 +17,7 @@ services:
       - ./traefik/acme.json:/letsencrypt/acme.json
     networks:
       - web
-    :
+    labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik-dashboard.rule=Host(`${TRAEFIK_DASHBOARD_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
@@ -49,7 +49,7 @@ services:
     networks:
       - web
       - app
-    :
+    labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.plaisir.rule=Host(`${APP_DOMAIN}`)"
@@ -71,7 +71,7 @@ services:
     networks:
       - web
       - app
-    :
+    labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.plaisir-api.rule=Host(`${APP_DOMAIN}`) && PathPrefix(`/api`)"
