@@ -64,7 +64,6 @@
                   <option value="Étudiant">Étudiant</option>
                   <option value="Entreprise">Entreprise</option>
                   <option value="Collectivité">Collectivité</option>
-                  <option value="Particulier">Particulier</option>
                 </select>
               </div>
               <div class="space-y-2">
@@ -438,32 +437,6 @@
         goToStep(target);
       })
     );
-
-    const eventTypeSelect = document.getElementById("projectEventType");
-    const orgFields = document.getElementById("projectOrgFields");
-    const companyField = document.querySelector('[name="companyName"]');
-    const siretField = document.querySelector('[name="siret"]');
-
-    const toggleOrgFields = () => {
-      const isIndividual = eventTypeSelect?.value === "Particulier";
-      if (orgFields) orgFields.classList.toggle("hidden", isIndividual);
-      [companyField, siretField].forEach((field) => {
-        if (!field) return;
-        if (isIndividual) {
-          field.removeAttribute("required");
-          field.value = "";
-          field.setCustomValidity("");
-          clearFieldState(field);
-        } else {
-          field.setAttribute("required", "true");
-        }
-      });
-    };
-
-    if (eventTypeSelect) {
-      eventTypeSelect.addEventListener("change", toggleOrgFields);
-      toggleOrgFields();
-    }
 
     const toggleBlock = (groupName, wrap, requiredFields = []) => {
       const radios = document.querySelectorAll(`input[name="${groupName}"]`);
