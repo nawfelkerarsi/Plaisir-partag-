@@ -33,6 +33,7 @@
           <div>
             <p class="uppercase text-xs tracking-[0.2em] text-gray-500">Formulaire</p>
             <h2 class="text-3xl font-semibold">Gestion de projet</h2>
+            <p class="text-xs text-gray-500">* Champs obligatoires</p>
           </div>
           <div class="flex flex-wrap items-center gap-4 text-sm">
             <div class="flex items-center gap-2">
@@ -49,7 +50,7 @@
             </div>
             <div class="flex items-center gap-2">
               <span class="w-6 h-6 rounded-full bg-gray-300 text-ink text-xs font-semibold flex items-center justify-center" data-step-dot="4">IV</span>
-              <span class="text-xs md:text-sm">Animation</span>
+              <span class="text-xs md:text-sm">Animations</span>
             </div>
           </div>
         </div>
@@ -58,7 +59,7 @@
           <div data-step="1" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Type d'événement</label>
+                <label class="block text-sm font-medium">Type d'événement <span class="text-red-500">*</span></label>
                 <select id="projectEventType" name="eventType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
                   <option value="">Sélectionnez</option>
                   <option value="Étudiant">Étudiant</option>
@@ -67,40 +68,40 @@
                 </select>
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Adresse mail</label>
+                <label class="block text-sm font-medium">Adresse mail <span class="text-red-500">*</span></label>
                 <input name="email" type="email" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Nom</label>
+                <label class="block text-sm font-medium">Nom <span class="text-red-500">*</span></label>
                 <input name="lastName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Prénom</label>
+                <label class="block text-sm font-medium">Prénom <span class="text-red-500">*</span></label>
                 <input name="firstName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Numéro de téléphone</label>
+                <label class="block text-sm font-medium">Numéro de téléphone <span class="text-red-500">*</span></label>
                 <input name="phone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Adresse de facturation</label>
+                <label class="block text-sm font-medium">Adresse de facturation <span class="text-red-500">*</span></label>
                 <input name="billingAddress" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div id="projectOrgFields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Dénomination sociale</label>
+                <label class="block text-sm font-medium">Dénomination sociale <span class="text-red-500">*</span></label>
                 <input name="companyName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Numéro de SIRET (9 chiffres)</label>
+                <label class="block text-sm font-medium">Numéro de SIRET ou RNA <span class="text-red-500">*</span></label>
                 <input name="siret" type="text" inputmode="numeric" pattern="[0-9]{9}" maxlength="9" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
@@ -114,7 +115,7 @@
 
           <div data-step="2" class="space-y-6 hidden">
             <div class="space-y-3">
-              <p class="text-sm font-medium">Recherchez-vous un lieu ?</p>
+              <p class="text-sm font-medium">Recherchez-vous un lieu ? <span class="text-red-500">*</span></p>
               <div class="flex gap-3">
                 <label class="flex-1">
                   <input type="radio" name="needVenue" value="Oui" class="peer sr-only" required />
@@ -193,7 +194,7 @@
 
           <div data-step="3" class="space-y-8 hidden">
             <div class="space-y-3">
-              <p class="text-sm font-medium">Souhaitez-vous un service traiteur ?</p>
+              <p class="text-sm font-medium">Souhaitez-vous un service traiteur ? <span class="text-red-500">*</span></p>
               <div class="flex gap-3">
                 <label class="flex-1">
                   <input type="radio" name="needCatering" value="Oui" class="peer sr-only" required />
@@ -217,7 +218,7 @@
             </div>
 
             <div class="space-y-3">
-              <p class="text-sm font-medium">Souhaitez-vous un artiste ?</p>
+              <p class="text-sm font-medium">Souhaitez-vous un artiste ? <span class="text-red-500">*</span></p>
               <div class="flex gap-3">
                 <label class="flex-1">
                   <input type="radio" name="needArtist" value="Oui" class="peer sr-only" required />
@@ -268,13 +269,13 @@
           <div data-step="4" class="space-y-8 hidden">
             <div class="grid grid-cols-1 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Horaire de la représentation</label>
+                <label class="block text-sm font-medium">Horaire de la représentation <span class="text-red-500">*</span></label>
                 <input name="representationTime" type="time" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="space-y-3">
-              <p class="text-sm font-medium">Souhaitez-vous une animation ?</p>
+              <p class="text-sm font-medium">Souhaitez-vous une animation ? <span class="text-red-500">*</span></p>
               <div class="flex gap-3">
                 <label class="flex-1">
                   <input type="radio" name="needAnimation" value="Oui" class="peer sr-only" required />
@@ -298,7 +299,7 @@
             </div>
 
             <div class="space-y-2">
-              <label class="block text-sm font-medium">Message : veuillez affiner votre demande</label>
+              <label class="block text-sm font-medium">Message : veuillez affiner votre demande <span class="text-red-500">*</span></label>
               <textarea name="message" rows="4" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none"></textarea>
             </div>
 

@@ -34,6 +34,7 @@
           <div>
             <p class="uppercase text-xs tracking-[0.2em] text-gray-500">Formulaire</p>
             <h2 class="text-3xl font-semibold">Booking d'artistes</h2>
+            <p class="text-xs text-gray-500">* Champs obligatoires</p>
           </div>
           <div class="flex flex-wrap items-center gap-4 text-sm">
             <div class="flex items-center gap-2">
@@ -55,7 +56,7 @@
           <div data-step="1" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Type d'événement</label>
+                <label class="block text-sm font-medium">Type d'événement <span class="text-red-500">*</span></label>
                 <select id="artistEventType" name="eventType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
                   <option value="">Sélectionnez</option>
                   <option value="Étudiant">Étudiant</option>
@@ -64,46 +65,46 @@
                 </select>
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Adresse mail</label>
+                <label class="block text-sm font-medium">Adresse mail <span class="text-red-500">*</span></label>
                 <input name="email" type="email" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Nom</label>
+                <label class="block text-sm font-medium">Nom <span class="text-red-500">*</span></label>
                 <input name="lastName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Prénom</label>
+                <label class="block text-sm font-medium">Prénom <span class="text-red-500">*</span></label>
                 <input name="firstName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Numéro de téléphone</label>
+                <label class="block text-sm font-medium">Numéro de téléphone <span class="text-red-500">*</span></label>
                 <input name="phone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Adresse de facturation</label>
+                <label class="block text-sm font-medium">Adresse de facturation <span class="text-red-500">*</span></label>
                 <input name="billingAddress" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div id="artistOrgFields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Dénomination sociale</label>
+                <label class="block text-sm font-medium">Dénomination sociale <span class="text-red-500">*</span></label>
                 <input id="artistCompany" name="companyName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Numéro de SIRET (9 chiffres)</label>
+                <label class="block text-sm font-medium">Numéro de SIRET ou RNA <span class="text-red-500">*</span></label>
                 <input id="artistSiret" name="siret" type="text" inputmode="numeric" pattern="[0-9]{9}" maxlength="9" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="space-y-2">
-              <label class="block text-sm font-medium">Nom de l'artiste - choix 1</label>
+              <label class="block text-sm font-medium">Nom de l'artiste - choix 1 <span class="text-red-500">*</span></label>
               <input name="artistChoice1" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
             </div>
             <div class="space-y-2">
@@ -125,11 +126,11 @@
           <div data-step="2" class="space-y-6 hidden">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Date(s) de l'événement</label>
+                <label class="block text-sm font-medium">Date(s) de l'événement <span class="text-red-500">*</span></label>
                 <input name="eventDate" type="date" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Type de représentation</label>
+                <label class="block text-sm font-medium">Type de représentation <span class="text-red-500">*</span></label>
                 <select name="representationType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
                   <option value="">Sélectionnez</option>
                   <option value="Showcase">Showcase</option>
@@ -142,18 +143,18 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Horaire de la représentation</label>
+                <label class="block text-sm font-medium">Horaire de la représentation <span class="text-red-500">*</span></label>
                 <input name="showTime" type="time" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Nom du lieu</label>
+                <label class="block text-sm font-medium">Nom du lieu <span class="text-red-500">*</span></label>
                 <input name="venueName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Type de lieu</label>
+                <label class="block text-sm font-medium">Type de lieu <span class="text-red-500">*</span></label>
                 <select name="venueType" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required>
                   <option value="">Sélectionnez</option>
                   <option value="Club">Club</option>
@@ -163,13 +164,13 @@
                 </select>
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium">Adresse du lieu</label>
+                <label class="block text-sm font-medium">Adresse du lieu <span class="text-red-500">*</span></label>
                 <input name="venueAddress" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
               </div>
             </div>
 
             <div class="space-y-2">
-              <label class="block text-sm font-medium">Nombre estimé de participants</label>
+              <label class="block text-sm font-medium">Nombre estimé de participants <span class="text-red-500">*</span></label>
               <input name="participants" type="number" min="1" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none" required />
             </div>
 
@@ -181,7 +182,7 @@
 
           <div data-step="3" class="space-y-6 hidden">
             <div class="space-y-2">
-              <label class="block text-sm font-medium">Message : veuillez affiner votre demande</label>
+              <label class="block text-sm font-medium">Message : veuillez affiner votre demande <span class="text-red-500">*</span></label>
               <textarea name="message" rows="4" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-ink focus:outline-none"></textarea>
             </div>
 
