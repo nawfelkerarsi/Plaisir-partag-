@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plaisir Partagé - Version événementielle</title>
+  <meta name="theme-color" content="#0b0e13" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/global.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg-deep: #0b0e13;
+      --bg-mid: #151a20;
+      --text: #f5f4f0;
+      --muted: rgba(245, 244, 240, 0.6);
+      --accent: #b8f7ce;
+      --accent-strong: #6ce9a8;
+      --accent-fade: rgba(184, 247, 206, 0.28);
+      --card-bg: rgba(10, 12, 16, 0.55);
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Sora", sans-serif;
+      color: var(--text);
+      background: var(--bg-deep);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      border: none;
+      background: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .event-stage {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.2rem, 2.5vw, 2.4rem);
+      padding: clamp(1.5rem, 4vw, 3.5rem);
+      isolation: isolate;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--bg-deep), var(--bg-mid));
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    .event-stage::before,
+    .event-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .event-stage::before {
+      background:
+        radial-gradient(70% 60% at 10% 10%, rgba(255, 255, 255, 0.08), transparent 60%),
+        radial-gradient(60% 50% at 80% 0%, rgba(255, 255, 255, 0.04), transparent 60%),
+        radial-gradient(80% 70% at 50% 120%, rgba(255, 255, 255, 0.06), transparent 65%);
+      z-index: 0;
+    }
+
+    .event-stage::after {
+      background: radial-gradient(60% 50% at 70% 20%, var(--accent-fade), transparent 60%);
+      opacity: 0.7;
+      filter: blur(60px);
+      transform: translate3d(0, 0, 0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      z-index: 1;
+    }
+
+    .event-stage.is-active::after {
+      opacity: 0.95;
+      transform: translate3d(2%, -3%, 0);
+    }
+
+    .event-media {
+      position: absolute;
+      inset: 0;
+      background-image: url("assets/0.jpeg");
+      background-size: cover;
+      background-position: center;
+      opacity: 0.3;
+      filter: grayscale(1) saturate(0) contrast(1.1);
+      transition: opacity 0.6s ease, transform 0.8s ease, filter 0.6s ease;
+      z-index: 0;
+    }
+
+    .event-stage.is-active .event-media {
+      opacity: 0.45;
+      transform: scale(1.02);
+      filter: grayscale(0) saturate(1.05) contrast(1.2);
+    }
+
+    .event-noise {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(115deg, rgba(255, 255, 255, 0.04), transparent 40%),
+        linear-gradient(320deg, rgba(255, 255, 255, 0.03), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.35;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .event-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      z-index: 2;
+      animation: fade-up 0.9s ease both;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      width: clamp(110px, 14vw, 170px);
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .brand-tag {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      color: var(--muted);
+    }
+
+    .event-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.2rem, 2.5vw, 2.6rem);
+      z-index: 2;
+    }
+
+    .event-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(1rem, 2.6vw, 1.8rem);
+      align-items: stretch;
+    }
+
+    .event-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: clamp(210px, 24vw, 280px);
+      border-radius: 1.6rem;
+      overflow: hidden;
+      padding: clamp(1.4rem, 2.2vw, 1.9rem);
+      text-align: left;
+      border: 1px solid rgba(8, 10, 12, 0.08);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+      animation: fade-up 0.9s ease both;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .event-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(1) saturate(0);
+      transition: transform 0.6s ease, filter 0.6s ease;
+      z-index: 0;
+    }
+
+    .event-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+      border-color: rgba(8, 10, 12, 0.14);
+    }
+
+    .event-card:hover img,
+    .event-card:focus-visible img,
+    .event-card.is-selected img {
+      transform: scale(1.05);
+      filter: grayscale(0) saturate(1);
+    }
+
+    .event-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .card-mask-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .card-mask-layer svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .card-mask-layer text {
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 700;
+    }
+
+    .card-mask-layer .mask-fill {
+      fill: #000000c2;
+      -webkit-backdrop-filter: blur(100px);
+      backdrop-filter: blur(100px);
+    }
+
+    .event-title-block {
+      margin-top: auto;
+      max-width: min(900px, 90%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      animation: fade-up 0.9s ease both;
+      animation-delay: 0.3s;
+    }
+
+    .event-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.4em;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .event-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(3.5rem, 12vw, 11rem);
+      line-height: 0.85;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.86;
+      min-height: 1em;
+      text-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      transition: transform 0.6s ease, letter-spacing 0.6s ease, opacity 0.6s ease;
+    }
+
+    .event-stage.is-active .event-title {
+      transform: translateY(-6px);
+      letter-spacing: 0.1em;
+      opacity: 1;
+    }
+
+    .event-title .title-letter {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18%);
+      animation: letter-reveal 0.6s ease forwards;
+      animation-delay: calc(var(--i) * 0.04s);
+    }
+
+    @keyframes fade-up {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes letter-reveal {
+      0% {
+        opacity: 0;
+        transform: translateY(22%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .event-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .event-card {
+        min-height: 200px;
+      }
+
+      .event-title-block {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .event-stage {
+        padding: 1.4rem;
+      }
+
+      .brand-text {
+        display: none;
+      }
+
+      .event-title {
+        letter-spacing: 0.05em;
+      }
+
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .event-title .title-letter {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main
+    class="event-stage"
+    data-default-kicker=""
+    data-default-accent="#b8f7ce"
+    data-default-accent-strong="#6ce9a8"
+    data-default-accent-fade="rgba(184, 247, 206, 0.28)"
+    data-default-image="assets/0.jpeg"
+  >
+    <div class="event-media" aria-hidden="true"></div>
+    <div class="event-noise" aria-hidden="true"></div>
+
+    <header class="event-top">
+      <div class="brand">
+        <img class="brand-logo" src="assets/logo.svg" alt="Plaisir Partagé" />
+      </div>
+    </header>
+
+    <section class="event-body">
+      <div class="event-cards" role="list">
+        <a
+          class="event-card"
+          href="/espaces"
+          aria-label="Espaces"
+          style="--delay: 0s"
+          data-title="Espaces"
+          data-subtitle=""
+          data-kicker="Location d'espaces"
+          data-accent="#b8f7ce"
+          data-accent-strong="#6ce9a8"
+          data-accent-fade="rgba(184, 247, 206, 0.28)"
+          data-image="assets/0.jpeg"
+        >
+          <img src="assets/0.jpeg" alt="Location d'espaces" loading="lazy" />
+          <div class="card-mask-layer">
+            <svg preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <mask id="mask-espaces">
+                  <rect width="100%" height="100%" fill="white"></rect>
+                  <text x="50%" y="60%" text-anchor="middle" font-size="75" fill="black" letter-spacing="2">ESPACES</text>
+                </mask>
+              </defs>
+              <rect class="mask-fill" width="100%" height="100%" mask="url(#mask-espaces)"></rect>
+              <text 
+                x="50%" 
+                y="60%" 
+                text-anchor="middle" 
+                font-size="75" 
+                letter-spacing="2" 
+                fill="none" 
+                stroke="white" 
+                stroke-width="0.2"
+                style="pointer-events: none;"> ESPACES
+              </text>
+            </svg>
+          </div>
+        </a>
+
+        <a
+          class="event-card"
+          href="/artistes"
+          aria-label="Artistes"
+          style="--delay: 0.1s"
+          data-title="Artistes"
+          data-subtitle=""
+          data-kicker="Booking d'artistes"
+          data-accent="#f5d37a"
+          data-accent-strong="#f1b24a"
+          data-accent-fade="rgba(245, 211, 122, 0.32)"
+          data-image="assets/l_artistes_t7.jpg"
+        >
+          <img src="assets/l_artistes_t7.jpg" alt="Artistes en studio" loading="lazy" />
+          <div class="card-mask-layer">
+            <svg  preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                  <mask id="mask-artistes">
+                    <rect width="100%" height="100%" fill="white"></rect>
+                    <text x="50%" y="60%" text-anchor="middle" font-size="75" fill="black" letter-spacing="2">ARTISTES</text>
+                  </mask>
+              </defs>
+              <rect class="mask-fill" width="100%" height="100%" mask="url(#mask-artistes)"></rect>
+              <text 
+              x="50%" 
+              y="60%" 
+              text-anchor="middle" 
+              font-size="75" 
+              letter-spacing="2" 
+              fill="none" 
+              stroke="white" 
+              stroke-width="0.2"
+              style="pointer-events: none;"> ARTISTES
+            </text>
+            </svg>
+          </div>
+        </a>
+
+        <a
+          class="event-card"
+          href="/projets"
+          aria-label="Projets"
+          style="--delay: 0.2s"
+          data-title="Projets"
+          data-subtitle=""
+          data-kicker="Gestion de projet"
+          data-accent="#84c7ff"
+          data-accent-strong="#4ea5f3"
+          data-accent-fade="rgba(132, 199, 255, 0.32)"
+          data-image="assets/l_projets_t7.jpg"
+        >
+          <img src="assets/l_projets_t7.jpg" alt="Gestion de projets" loading="lazy" />
+          <div class="card-mask-layer">
+            <svg preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <mask id="mask-projets">
+                  <rect width="100%" height="100%" fill="white"></rect>
+                  <text x="50%" y="60%" text-anchor="middle" font-size="75" fill="black" letter-spacing="2">PROJETS</text>
+                </mask>
+              </defs>
+              <rect class="mask-fill" width="100%" height="100%" mask="url(#mask-projets)"></rect>
+              <text 
+                x="50%" 
+                y="60%" 
+                text-anchor="middle" 
+                font-size="75" 
+                letter-spacing="2" 
+                fill="none" 
+                stroke="white" 
+                stroke-width="0.2"
+                style="pointer-events: none;"> PROJETS
+              </text>
+
+            </svg>
+          </div>
+        </a>
+      </div>
+
+      <div class="event-title-block">
+        <p class="event-kicker"></p>
+        <h1 class="event-title" aria-live="polite"></h1>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    const stage = document.querySelector(".event-stage");
+    const title = document.querySelector(".event-title");
+    const subtitle = document.querySelector(".event-subtitle");
+    const kicker = document.querySelector(".event-kicker");
+    const media = document.querySelector(".event-media");
+    const cards = Array.from(document.querySelectorAll(".event-card"));
+    const cardsWrap = document.querySelector(".event-cards");
+
+    const defaultState = {
+      title: "",
+      subtitle: stage.dataset.defaultSubtitle || "",
+      kicker: stage.dataset.defaultKicker || "",
+      accent: stage.dataset.defaultAccent || "#b8f7ce",
+      accentStrong: stage.dataset.defaultAccentStrong || "#6ce9a8",
+      accentFade: stage.dataset.defaultAccentFade || "rgba(184, 247, 206, 0.28)",
+      image: stage.dataset.defaultImage || ""
+    };
+
+    const setAnimatedTitle = (text) => {
+      title.innerHTML = "";
+      title.setAttribute("aria-label", text);
+      if (!text) return;
+      Array.from(text).forEach((char, index) => {
+        const span = document.createElement("span");
+        span.className = "title-letter";
+        span.style.setProperty("--i", index);
+        span.textContent = char === " " ? "\u00A0" : char;
+        span.setAttribute("aria-hidden", "true");
+        title.appendChild(span);
+      });
+    };
+
+    const applyState = (state, active) => {
+      setAnimatedTitle(state.title);
+      if (subtitle) {
+        subtitle.textContent = state.subtitle;
+      }
+      kicker.textContent = state.kicker;
+      stage.style.setProperty("--accent", state.accent);
+      stage.style.setProperty("--accent-strong", state.accentStrong);
+      stage.style.setProperty("--accent-fade", state.accentFade);
+      media.style.backgroundImage = `url("${state.image}")`;
+      stage.classList.toggle("is-active", active);
+    };
+
+    const resetState = () => {
+      cards.forEach((card) => card.classList.remove("is-selected"));
+      applyState(defaultState, false);
+    };
+
+    const activateCard = (card) => {
+      const state = {
+        title: card.dataset.title,
+        subtitle: card.dataset.subtitle,
+        kicker: card.dataset.kicker,
+        accent: card.dataset.accent,
+        accentStrong: card.dataset.accentStrong,
+        accentFade: card.dataset.accentFade,
+        image: card.dataset.image
+      };
+      cards.forEach((item) => item.classList.toggle("is-selected", item === card));
+      applyState(state, true);
+    };
+
+    cards.forEach((card) => {
+      card.addEventListener("mouseenter", () => activateCard(card));
+      card.addEventListener("focus", () => activateCard(card));
+      card.addEventListener("click", () => activateCard(card));
+    });
+
+    cardsWrap.addEventListener("mouseleave", resetState);
+    cardsWrap.addEventListener("focusout", (event) => {
+      if (!cardsWrap.contains(event.relatedTarget)) {
+        resetState();
+      }
+    });
+
+    resetState();
+  </script>
+  <script src="/footer.js"></script>
+</body>
+</html>
